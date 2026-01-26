@@ -8,7 +8,7 @@ import { ThemedImage } from "@/components/shared/ThemedImage";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen flex flex-col">
       <PageTransition className="flex-1 flex flex-col px-6 pb-12">
         <div className="max-w-4xl w-full mx-auto flex-1 flex flex-col">
           {/* Header */}

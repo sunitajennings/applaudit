@@ -1,8 +1,10 @@
 "use client";
 
 import Image from "next/image";
+import { ArrowRight, Plus } from "lucide-react";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { PageTransition } from "@/components/layout/PageTransition";
+import { Button } from "@/components/ui/button";
 
 export default function StyleguidePage() {
   return (
@@ -35,7 +37,7 @@ export default function StyleguidePage() {
           </div>
           <div className="grid grid-cols-2 gap-6">
             {/* Light Theme Preview */}
-            <div className="bg-[#F5F0E6] rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px]">
+            <div className="bg-[#FEF6DA] rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px]">
               <Image
                 src="/images/logos/logobug.svg"
                 alt="Applaudit Logo Mark"
@@ -46,7 +48,7 @@ export default function StyleguidePage() {
             </div>
 
             {/* Dark Theme Preview */}
-            <div className="bg-[#2D2438] rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px]">
+            <div className="bg-[#2B1927] rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px]">
               <Image
                 src="/images/logos/logobug_dark.svg"
                 alt="Applaudit Logo Mark"
@@ -62,7 +64,7 @@ export default function StyleguidePage() {
         <section className="mb-16">
           <div className="grid grid-cols-2 gap-6">
             {/* Dark Theme Preview */}
-            <div className="bg-[#2D2438] rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px]">
+            <div className="bg-[#2B1927] rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px]">
               <Image
                 src="/images/logos/logo_dark.svg"
                 alt="Applaudit Logo Mark"
@@ -72,7 +74,7 @@ export default function StyleguidePage() {
               />
             </div>  
             {/* Light Theme Preview */}
-            <div className="bg-[#F5F0E6] rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px]">
+            <div className="bg-[#FEF6DA] rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px]">
               <Image
                 src="/images/logos/logo.svg"
                 alt="Applaudit Logo Mark"
@@ -103,31 +105,31 @@ export default function StyleguidePage() {
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <div className="w-full h-20 bg-[#F5F0E6] rounded border border-border"></div>
+                  <div className="w-full h-20 bg-[#FEF6DA] rounded border border-border"></div>
                   <div>
                     <p className="text-sm font-medium text-foreground">Background</p>
-                    <p className="text-xs text-muted-foreground font-mono">#F5F0E6</p>
+                    <p className="text-xs text-muted-foreground font-mono">#FEF6DA</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <div className="w-full h-20 bg-[#2D2438] rounded border border-border"></div>
+                  <div className="w-full h-20 bg-[#2B1927] rounded border border-border"></div>
                   <div>
                     <p className="text-sm font-medium text-foreground">Foreground</p>
-                    <p className="text-xs text-muted-foreground font-mono">#2D2438</p>
+                    <p className="text-xs text-muted-foreground font-mono">#2B1927</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <div className="w-full h-20 bg-[#F26B6B] rounded border border-border"></div>
+                  <div className="w-full h-20 bg-[#FF5E6C] rounded border border-border"></div>
                   <div>
                     <p className="text-sm font-medium text-foreground">Primary</p>
-                    <p className="text-xs text-muted-foreground font-mono">#F26B6B</p>
+                    <p className="text-xs text-muted-foreground font-mono">#FF5E6C</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <div className="w-full h-20 bg-[#2D2438] rounded border border-border"></div>
+                  <div className="w-full h-20 bg-[#2B1927] rounded border border-border"></div>
                   <div>
                     <p className="text-sm font-medium text-foreground">Secondary</p>
-                    <p className="text-xs text-muted-foreground font-mono">#2D2438</p>
+                    <p className="text-xs text-muted-foreground font-mono">#2B1927</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -175,24 +177,24 @@ export default function StyleguidePage() {
               </h3>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                 <div className="space-y-2">
-                  <div className="w-full h-20 bg-[#2D2438] rounded border border-border"></div>
+                  <div className="w-full h-20 bg-[#2B1927] rounded border border-border"></div>
                   <div>
                     <p className="text-sm font-medium text-foreground">Background</p>
-                    <p className="text-xs text-muted-foreground font-mono">#2D2438</p>
+                    <p className="text-xs text-muted-foreground font-mono">#2B1927</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <div className="w-full h-20 bg-[#F5F0E6] rounded border border-border"></div>
+                  <div className="w-full h-20 bg-[#FEF6DA] rounded border border-border"></div>
                   <div>
                     <p className="text-sm font-medium text-foreground">Foreground</p>
-                    <p className="text-xs text-muted-foreground font-mono">#F5F0E6</p>
+                    <p className="text-xs text-muted-foreground font-mono">#FEF6DA</p>
                   </div>
                 </div>
                 <div className="space-y-2">
-                  <div className="w-full h-20 bg-[#F26B6B] rounded border border-border"></div>
+                  <div className="w-full h-20 bg-[#FF5E6C] rounded border border-border"></div>
                   <div>
                     <p className="text-sm font-medium text-foreground">Primary</p>
-                    <p className="text-xs text-muted-foreground font-mono">#F26B6B</p>
+                    <p className="text-xs text-muted-foreground font-mono">#FF5E6C</p>
                   </div>
                 </div>
                 <div className="space-y-2">
@@ -368,10 +370,65 @@ export default function StyleguidePage() {
             </p>
           </div>
 
-          <div className="border-t border-border pt-8">
-            <p className="text-base text-muted-foreground">
-              Elements section coming soon.
-            </p>
+          <div className="border-t border-border pt-8 space-y-12">
+            {/* Buttons */}
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-display text-xl font-bold text-foreground mb-4">
+                  Buttons
+                </h3>
+                
+                {/* Button Variants */}
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-3">Variants</p>
+                    <div className="flex flex-wrap gap-3">
+                      <Button variant="default" className="rounded-full">Default</Button>
+                      <Button variant="secondary" className="rounded-full">Secondary</Button>
+                      <Button variant="outline" className="rounded-full">Outline</Button>
+                      <Button variant="ghost" className="rounded-full">Ghost</Button>
+                      <Button variant="destructive" className="rounded-full">Destructive</Button>
+                      <Button variant="link" className="rounded-full">Link</Button>
+                    </div>
+                  </div>
+
+                  {/* Button Sizes */}
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-3">Sizes</p>
+                    <div className="flex flex-wrap items-center gap-3">
+                      <Button size="xs" className="rounded-full">Extra Small</Button>
+                      <Button size="sm" className="rounded-full">Small</Button>
+                      <Button size="default" className="rounded-full">Default</Button>
+                      <Button size="lg" className="rounded-full">Large</Button>
+                    </div>
+                  </div>
+
+                  {/* Button States */}
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-3">States</p>
+                    <div className="flex flex-wrap gap-3">
+                      <Button className="rounded-full">Normal</Button>
+                      <Button disabled className="rounded-full">Disabled</Button>
+                    </div>
+                  </div>
+
+                  {/* Button with Icon */}
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-3">With Icon</p>
+                    <div className="flex flex-wrap gap-3">
+                      <Button className="rounded-full">
+                        Get Started
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" className="rounded-full">
+                        <Plus className="h-4 w-4" />
+                        Add Item
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </PageTransition>
