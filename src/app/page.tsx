@@ -82,7 +82,7 @@ export default function LandingPage() {
           {/* Footer */}
           <footer className="py-6 text-left">
             <p className="text-sm text-muted-foreground inline-flex items-center gap-1">
-              created with love <Heart className="h-3.5 w-3.5 fill-current" />
+              created with love <Heart className="h-3.5 w-3.5 fill-current" /> by sunita & colleen
             </p>
           </footer>
         </div>
