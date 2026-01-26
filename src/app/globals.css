@@ -125,4 +125,13 @@
   body {
     @apply bg-background text-foreground;
   }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-unbounded);
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-unbounded);
+  }
 }
