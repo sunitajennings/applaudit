@@ -57,7 +57,7 @@ export default function LandingPage() {
               </p>
 
               {/* CTA Button */}
-              <Button asChild size="lg" className="w-full max-w-xs h-14 text-lg font-semibold rounded-full">
+              <Button asChild size="lg" className="w-full mt-8 max-w-xs h-14 text-lg font-semibold rounded-full">
                 <Link href="/login">
                   Get Started Now
                   <ArrowRight className="h-5 w-5 ml-1" />

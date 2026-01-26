@@ -6,6 +6,7 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { EmailForm } from "@/components/auth/EmailForm";
 import { useAuth } from "@/lib/store/auth";
 import { ThemedImage } from "@/components/shared/ThemedImage";
+import { Card } from "@/components/ui/card";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -38,7 +39,7 @@ export default function LoginPage() {
       <PageTransition className="flex-1 flex flex-col items-center justify-center px-6 pb-12">
         <main className="max-w-md w-full flex flex-col items-center">
           {/* Illustration */}
-          <div className="mb-8">
+          <div className="w-full">
             <ThemedImage
               lightSrc="/images/illustrations/signup_womanpopcorn.svg"
               darkSrc="/images/illustrations/signup_womanpopcorn_dark.svg"
@@ -46,11 +47,12 @@ export default function LoginPage() {
               width={240}
               height={240}
               priority
+              className="w-full"
             />
           </div>
 
           {/* Dark Card */}
-          <div className="w-full bg-card text-card-foreground rounded-2xl p-8">
+          <Card variant="dark" className="w-full rounded-2xl p-8 border-0 gap-0">
             <h1 className="text-2xl font-bold mb-2">Get your sign-in link</h1>
             <p className="text-muted-foreground mb-6">
               Enter your email and we&apos;ll send you a secure login link. No
@@ -58,7 +60,7 @@ export default function LoginPage() {
             </p>
 
             <EmailForm onSubmit={handleSubmit} isLoading={isLoading} />
-          </div>
+          </Card>
         </main>
       </PageTransition>
     </div>

@@ -5,6 +5,7 @@ import { ArrowRight, Plus } from "lucide-react";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Button } from "@/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter, CardAction } from "@/components/ui/card";
 
 export default function StyleguidePage() {
   return (
@@ -425,6 +426,100 @@ export default function StyleguidePage() {
                         Add Item
                       </Button>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Cards */}
+            <div className="space-y-6">
+              <div>
+                <h3 className="font-display text-xl font-bold text-foreground mb-4">
+                  Cards
+                </h3>
+                
+                {/* Card Variants */}
+                <div className="space-y-4">
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-3">Variants</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <Card variant="default">
+                        <CardHeader>
+                          <CardTitle>Default Card</CardTitle>
+                          <CardDescription>This is a default card variant</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-foreground">
+                            Card content goes here. This demonstrates the default styling.
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      <Card variant="light">
+                        <CardHeader>
+                          <CardTitle>Light Card</CardTitle>
+                          <CardDescription>This is a light card variant</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-foreground">
+                            Card content goes here. This demonstrates the light styling.
+                          </p>
+                        </CardContent>
+                      </Card>
+
+                      <Card variant="dark">
+                        <CardHeader>
+                          <CardTitle>Dark Card</CardTitle>
+                          <CardDescription>This is a dark card variant</CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-foreground">
+                            Card content goes here. This demonstrates the dark styling.
+                          </p>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </div>
+
+                  {/* Card with Footer */}
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-3">With Footer</p>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Card with Footer</CardTitle>
+                        <CardDescription>This card includes a footer section</CardDescription>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-foreground">
+                          Card content goes here. The footer can contain actions or additional information.
+                        </p>
+                      </CardContent>
+                      <CardFooter>
+                        <Button variant="outline" size="sm" className="rounded-full">Cancel</Button>
+                        <Button size="sm" className="rounded-full">Save</Button>
+                      </CardFooter>
+                    </Card>
+                  </div>
+
+                  {/* Card with Action */}
+                  <div>
+                    <p className="text-sm text-muted-foreground mb-3">With Action</p>
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Card with Action</CardTitle>
+                        <CardDescription>This card includes an action button in the header</CardDescription>
+                        <CardAction>
+                          <Button variant="ghost" size="sm" className="rounded-full">
+                            <Plus className="h-4 w-4" />
+                          </Button>
+                        </CardAction>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="text-sm text-foreground">
+                          Card content goes here. The action button appears in the top right of the header.
+                        </p>
+                      </CardContent>
+                    </Card>
                   </div>
                 </div>
               </div>
