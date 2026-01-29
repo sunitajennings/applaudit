@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
@@ -8,7 +9,7 @@ import { useAuth } from "@/lib/store/auth";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { Card } from "@/components/ui/card";
 
-export default function CallbackPage() {
+function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { completeSignIn } = useAuth();
@@ -62,5 +63,43 @@ export default function CallbackPage() {
         </main>
       </PageTransition>
     </div>
+  );
+}
+
+function CallbackFallback() {
+  return (
+    <div className="min-h-screen bg-background flex flex-col">
+      <PageTransition className="flex-1 flex flex-col mx-auto mt-24 px-6">
+        <main className="max-w-md w-full flex flex-col items-center">
+          <div className="w-full">
+            <ThemedImage
+              lightSrc="/images/illustrations/waiting_popcorn.svg"
+              darkSrc="/images/illustrations/waiting_popcorn_dark.svg"
+              alt="Popcorn"
+              width={240}
+              height={240}
+              priority
+              className="w-full"
+            />
+          </div>
+          <Card variant="dark" className="w-full rounded-2xl p-8 border-0 gap-0 text-center">
+            <p className="text-xl mb-6 font-display">
+              Logging you in...
+              <br />
+              Get the popcorn ready...
+            </p>
+            <Loader2 className="h-8 w-8 text-primary animate-spin mx-auto" />
+          </Card>
+        </main>
+      </PageTransition>
+    </div>
+  );
+}
+
+export default function CallbackPage() {
+  return (
+    <Suspense fallback={<CallbackFallback />}>
+      <CallbackContent />
+    </Suspense>
   );
 }

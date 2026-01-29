@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { CheckCircle2, Loader2, WandSparkles } from "lucide-react";
 import { PageTransition } from "@/components/layout/PageTransition";
@@ -13,7 +13,7 @@ import { useAuth } from "@/lib/store/auth";
 import { cn } from "@/lib/utils";
 import { IllustrationPlaceholder } from "@/components/shared/IllustrationPlaceholder";
 
-export default function AvatarPage() {
+function AvatarContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isPreview = searchParams.get("preview") !== null;
@@ -148,5 +148,30 @@ export default function AvatarPage() {
         </div>
       </PageTransition>
     </AppShell>
+  );
+}
+
+function AvatarFallback() {
+  return (
+    <AppShell variant="dark" showLogo={true} showAvatar={false}>
+      <PageTransition className="max-w-md mx-auto w-full">
+        <div className="space-y-8 mt-16">
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-display font-bold">Glow Up Time!</h1>
+          </div>
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        </div>
+      </PageTransition>
+    </AppShell>
+  );
+}
+
+export default function AvatarPage() {
+  return (
+    <Suspense fallback={<AvatarFallback />}>
+      <AvatarContent />
+    </Suspense>
   );
 }
