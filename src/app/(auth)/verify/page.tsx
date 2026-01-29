@@ -28,13 +28,14 @@ export default function VerifyPage() {
       <PageTransition className="flex-1 flex flex-col items-center justify-center px-6 pb-12">
         <main className="max-w-md w-full flex flex-col items-center">
           {/* Illustration */}
-          <div className="mb-8">
+          <div className="w-full flex">
             <ThemedImage
               lightSrc="/images/illustrations/waiting_popcorn.svg"
               darkSrc="/images/illustrations/waiting_popcorn_dark.svg"
               alt="Waiting with popcorn"
               width={240}
               height={240}
+              className="w-full h-auto object-cover"
               priority
             />
           </div>
