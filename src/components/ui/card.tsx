@@ -9,8 +9,8 @@ const cardVariants = cva(
     variants: {
       variant: {
         default: "bg-card text-card-foreground",
-        light: "bg-[#2B1927} text-[#2B1927] [&_.text-muted-foreground]:text-[#6B5F6F]",
-        dark: "bg-[#2B1927] text-[#FEF6DA] [&_.text-muted-foreground]:text-[#A89CAB]",
+        light: "bg-[#2B1927] text-[#2B1927] [&_.text-muted-foreground]:text-[#6B5F6F]",
+        dark: "bg-[#2B1927] text-[#FEF6DA] [&_.text-muted-foreground]:text-[#FEF6DA] [&_input]:!text-[#FEF6DA] [&_input::placeholder]:!text-[#FEF6DA]/70 [&_button]:!text-[#FEF6DA] [&_button:hover]:!text-[#FEF6DA] [&_button[data-slot='button']]:!text-[#2B1927]",
       },
     },
     defaultVariants: {

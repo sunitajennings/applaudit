@@ -55,7 +55,7 @@ export function EmailForm({
               setEmail(e.target.value);
               if (error) setError(null);
             }}
-            className="pl-10 h-12 bg-background/10 border-border/50 text-foreground placeholder:text-muted-foreground"
+            className="pl-10 h-12 bg-background/10 border-border/50"
             disabled={isLoading}
             autoComplete="email"
             autoFocus

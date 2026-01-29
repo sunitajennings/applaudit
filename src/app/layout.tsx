@@ -25,6 +25,8 @@ export const metadata: Metadata = {
   description: "Predict the winners. Bring home the Oscar.",
 };
 
+import { GlobalNav } from "@/components/layout/GlobalNav";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +38,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${unbounded.variable} antialiased`}
       >
         <ThemeProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <AuthProvider>
+            <GlobalNav />
+            <div className="max-w-4xl w-full mx-auto">
+              {children}
+            </div>
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
