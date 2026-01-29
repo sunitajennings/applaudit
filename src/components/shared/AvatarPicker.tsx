@@ -45,7 +45,7 @@ export function AvatarPicker({
             selected={selectedAvatarId === avatar.id}
           />
           {selectedAvatarId === avatar.id && (
-            <div className="absolute inset-0 flex items-center justify-center">
+            <div className="absolute top-[-1] right-3 flex items-center justify-center">
               <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
                 <svg
                   className="w-4 h-4 text-primary-foreground"

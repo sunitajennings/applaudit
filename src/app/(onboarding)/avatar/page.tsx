@@ -66,7 +66,7 @@ export default function AvatarPage() {
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>
       <PageTransition className="max-w-md mx-auto w-full">
-        <div className="space-y-8">
+        <div className="space-y-8 mt-8">
           {/* Header */}
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-display font-bold">

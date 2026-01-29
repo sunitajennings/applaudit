@@ -41,7 +41,7 @@ export function GlobalNav({ className }: GlobalNavProps) {
 
           {/* Login Link / Home Icon */}
           {!isLoading && (
-            <Button asChild variant="ghost" size="sm">
+            <Button asChild variant="link" size="icon-lg">
               <Link href={loginHref}>
                 {isAuthenticated ? (
                   <Home className="h-5 w-5" />
