@@ -13,7 +13,7 @@ export default function StyleguidePage() {
       <PageTransition className="max-w-4xl mx-auto px-6 py-12">
         {/* Navigation */}
         <nav className="mb-12 pb-6 border-b border-border">
-          <div className="flex gap-6">
+          <div className="flex flex-wrap gap-6">
             <a href="#colors" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Colors
             </a>
@@ -22,6 +22,9 @@ export default function StyleguidePage() {
             </a>
             <a href="#elements" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
               Elements
+            </a>
+            <a href="/avatar?preview" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+              Avatar (preview)
             </a>
           </div>
         </nav>
