@@ -35,26 +35,7 @@ export function AppShell({
         variant === "light" ? "bg-background" : "bg-background",
         className
       )}
-    >
-      <header
-        className={cn(
-          "flex justify-between items-center p-4",
-          headerClassName
-        )}
-      >
-        <div className="flex items-center">
-          {showLogo && <Logo variant="icon" size="md" />}
-        </div>
-        <div className="flex items-center">
-          {showAvatar && (
-            <Avatar
-              initials={avatarInitials}
-              imageUrl={avatarImageUrl}
-              size="sm"
-            />
-          )}
-        </div>
-      </header>
+    >      
       <main className={cn("flex-1 px-4 pb-8", mainClassName)}>{children}</main>
     </div>
   );
