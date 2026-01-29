@@ -33,7 +33,7 @@ export default function CallbackPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       {/* Main Content */}
-      <PageTransition className="flex-1 flex flex-col items-center justify-center px-6">
+      <PageTransition className="flex-1 flex flex-col mx-auto mt-24 px-6">
         <main className="max-w-md w-full flex flex-col items-center">
           {/* Illustration */}
           <div className="w-full">
