@@ -10,19 +10,7 @@ export default function LandingPage() {
   return (
     <div className="min-h-screen flex flex-col">
       <PageTransition className="flex-1 flex flex-col px-6 pb-12">
-        <div className="max-w-4xl w-full mx-auto flex-1 flex flex-col">
-          {/* Header */}
-          <header className="py-6">
-            <ThemedImage
-              lightSrc="/images/logos/logo.svg"
-              darkSrc="/images/logos/logo_dark.svg"
-              alt="Applaudit"
-              width={140}
-              height={40}
-              priority
-            />
-          </header>
-
+        <div className="w-full flex-1 flex flex-col">
           {/* Main Content */}
           <main className="flex-1 flex flex-col md:flex-row md:items-center md:justify-center md:gap-12">
             {/* Hero Illustration - Mobile */}

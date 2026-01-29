@@ -23,18 +23,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      {/* Header */}
-      <header className="p-6">
-        <ThemedImage
-          lightSrc="/images/logos/logo.svg"
-          darkSrc="/images/logos/logo_dark.svg"
-          alt="Applaudit"
-          width={140}
-          height={40}
-          priority
-        />
-      </header>
-
       {/* Main Content */}
       <PageTransition className="flex-1 flex flex-col items-center justify-center px-6 pb-12">
         <main className="max-w-md w-full flex flex-col items-center">
