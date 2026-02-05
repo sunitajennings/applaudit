@@ -114,6 +114,14 @@ Push to `main` branch. Vercel auto-deploys from GitHub.
 | Host | Identified as party host (no special permissions) |
 | Participant | Enter actual winners, vote, view ballots |
 
+## Demo users
+
+| Email | Name | Role |
+|------|-----------|------|
+| colleen@example.com | Colleen | Admin |
+| camille@example.com | Camille | Host |
+| sunita@example.com | Sunita | Participant |
+
 ## Contributing
 
 1. Create a branch from `main`
