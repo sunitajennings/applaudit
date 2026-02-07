@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const DEFAULT_EVENT_ISO = "2026-03-02T01:00:00.000Z"; // Oscars 2026 example
-
-function getEventDate(): Date | null {
-  if (typeof window === "undefined") return null;
-  const iso = process.env.NEXT_PUBLIC_EVENT_START_ISO ?? DEFAULT_EVENT_ISO;
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
+import { getEventStartDate } from "@/data/oscar-2026";
 
 function Segment({
   value,
@@ -40,7 +32,7 @@ function Divider() {
 }
 
 export function Countdown() {
-  const eventDate = getEventDate();
+  const eventDate = getEventStartDate();
   const [now, setNow] = useState(() => (typeof window !== "undefined" ? Date.now() : 0));
   const [mounted, setMounted] = useState(false);
 

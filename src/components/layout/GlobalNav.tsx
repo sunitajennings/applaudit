@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useAuth } from "@/lib/store/auth";
+import { useNavCenter } from "@/lib/store/nav-center";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { Avatar } from "@/components/shared/Avatar";
 import { Button } from "@/components/ui/button";
@@ -19,6 +20,7 @@ interface GlobalNavProps {
 
 export function GlobalNav({ className }: GlobalNavProps) {
   const { user, isAuthenticated, isLoading, getInitials } = useAuth();
+  const { centerContent } = useNavCenter();
 
   const avatarInitials = user
     ? user.nickname
@@ -34,7 +36,7 @@ export function GlobalNav({ className }: GlobalNavProps) {
       )}
     >
       <div className="max-w-4xl w-full mx-auto px-6">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between gap-4">
           {/* Logo: logomark when logged in, full logo when not */}
           <Link href="/" className="flex items-center shrink-0">
             {!isLoading && isAuthenticated ? (
@@ -58,9 +60,18 @@ export function GlobalNav({ className }: GlobalNavProps) {
             )}
           </Link>
 
+          {/* Center: optional content (e.g. ballot back + title), flexes full width between logo and avatar */}
+          {centerContent != null ? (
+            <div className="flex flex-1 min-w-0 items-center justify-center overflow-hidden">
+              {centerContent}
+            </div>
+          ) : (
+            <div className="flex-1 min-w-0" aria-hidden />
+          )}
+
           {/* Right side: avatar when logged in, login link when not */}
           {!isLoading && isAuthenticated ? (
-            <div className="flex items-center">
+            <div className="flex items-center shrink-0">
               <Avatar
                 initials={avatarInitials}
                 imageUrl={user?.avatarUrl}
@@ -72,7 +83,9 @@ export function GlobalNav({ className }: GlobalNavProps) {
             <Button asChild variant="link" size="icon-lg">
               <Link href="/login">Login</Link>
             </Button>
-          ) : null}
+          ) : (
+            <div className="w-16 shrink-0" aria-hidden />
+          )}
         </div>
       </div>
     </nav>

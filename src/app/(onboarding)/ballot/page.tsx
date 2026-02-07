@@ -10,11 +10,17 @@ import { useAuth } from "@/lib/store/auth";
 import { useUser } from "@/lib/store/user";
 import { Countdown } from "@/components/stage/Countdown";
 import { IllustrationPlaceholder } from "@/components/shared/IllustrationPlaceholder";
+import { BingoGame } from "@/components/bingo/BingoGame";
+import { BallotList } from "@/components/ballot/BallotList";
+import { cn } from "@/lib/utils";
+
+type StageTab = "ballot" | "bingo";
 
 export default function BallotPage() {
   const router = useRouter();
   const { user } = useAuth();
   const { profile } = useUser();
+  const [tab, setTab] = useState<StageTab>("ballot");
 
   useEffect(() => {
     if (!user) {
@@ -90,6 +96,28 @@ export default function BallotPage() {
               />
             </div>
           </Link>
+              My Ballots
+            </button>
+            <button
+              type="button"
+              onClick={() => setTab("bingo")}
+              className={cn(
+                "flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors",
+                tab === "bingo"
+                  ? "bg-background text-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              Red carpet bingo
+            </button>
+          </div>
+
+          {tab === "ballot" && user && (
+            <BallotList
+              userId={user.id}
+              groupId={profile?.groupId ?? null}
+            />
+          )}
 
           <div className="space-y-4">
             <h2 className="text-xl font-display font-bold">My Ballots</h2>
