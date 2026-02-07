@@ -48,6 +48,18 @@ export default function LoginPage() {
             </p>
 
             <EmailForm onSubmit={handleSubmit} isLoading={isLoading} />
+
+            {/* Prototype only: skip email and go to verify — remove before production */}
+            <button
+              type="button"
+              onClick={() => {
+                signInWithEmail("prototype@example.com");
+                router.push("/verify");
+              }}
+              className="mt-4 w-full text-sm text-muted-foreground hover:text-foreground transition-colors underline"
+            >
+              Pretend I have one
+            </button>
           </Card>
         </main>
       </PageTransition>
