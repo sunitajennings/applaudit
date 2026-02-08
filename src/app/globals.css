@@ -138,10 +138,26 @@
     font-family: var(--font-unbounded);
   }
   .countdown-gradient {
-    background: linear-gradient(135deg, #F5E6A3 0%, #E8D45C 50%, #D4AF37 100%);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--gold) 70%, white) 0%,
+      color-mix(in srgb, var(--gold) 68%, white) 25%,
+      color-mix(in srgb, var(--gold) 50%, white) 50%,
+      color-mix(in srgb, var(--gold) 68%, white) 75%,
+      color-mix(in srgb, var(--gold) 70%, white) 100%
+    );
+    box-shadow: 0 0 20px color-mix(in srgb, var(--gold) 25%, transparent);
   }
   .dark .countdown-gradient {
-    background: linear-gradient(135deg, #F7E98E 0%, #F0E078 40%, #E0C04A 100%);
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--gold) 85%, white) 0%,
+      color-mix(in srgb, var(--gold) 90%, white) 25%,
+      color-mix(in srgb, var(--gold) 68%, white) 50%,
+      color-mix(in srgb, var(--gold) 90%, white) 75%,
+      color-mix(in srgb, var(--gold) 85%, white) 100%
+    );
+    box-shadow: 0 0 24px color-mix(in srgb, var(--gold) 20%, transparent);
   }
 }
 
