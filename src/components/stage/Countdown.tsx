@@ -11,8 +11,32 @@ function getEventDate(): Date | null {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
-function formatPart(n: number, label: string): string {
-  return `${n} ${label}${n !== 1 ? "s" : ""}`;
+function Segment({
+  value,
+  label,
+}: {
+  value: number;
+  label: string;
+}) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-0.5 min-w-0 flex-1 py-3">
+      <span className="text-lg sm:text-xl font-display font-bold tabular-nums text-foreground">
+        {value}
+      </span>
+      <span className="text-[10px] sm:text-xs font-medium uppercase tracking-wide text-foreground">
+        {label}
+      </span>
+    </div>
+  );
+}
+
+function Divider() {
+  return (
+    <div
+      className="shrink-0 w-px h-8 bg-gold/40 rounded-full"
+      aria-hidden
+    />
+  );
 }
 
 export function Countdown() {
@@ -28,7 +52,7 @@ export function Countdown() {
 
   if (!mounted || !eventDate) {
     return (
-      <div className="text-center text-muted-foreground text-sm">
+      <div className="text-center text-gold text-sm">
         Event time not set
       </div>
     );
@@ -41,7 +65,7 @@ export function Countdown() {
     return (
       <div className="text-center">
         <p className="text-xl font-display font-bold text-primary">Show time!</p>
-        <p className="text-muted-foreground text-sm">The red carpet is on.</p>
+        <p className="text-gold text-sm">The red carpet is on.</p>
       </div>
     );
   }
@@ -51,18 +75,20 @@ export function Countdown() {
   const hours = Math.floor((diff / 3600000) % 24);
   const days = Math.floor(diff / 86400000);
 
-  const parts: string[] = [];
-  if (days > 0) parts.push(formatPart(days, "day"));
-  if (hours > 0) parts.push(formatPart(hours, "hr"));
-  parts.push(formatPart(minutes, "min"));
-  parts.push(formatPart(seconds, "sec"));
-
   return (
-    <div className="text-center space-y-1">
-      <p className="text-muted-foreground text-sm">Time until the show</p>
-      <p className="text-xl font-display font-bold tabular-nums">
-        {parts.join(" ")}
-      </p>
+    <div
+      className="countdown-gradient flex items-stretch rounded-full border border-gold/50 shadow-sm overflow-hidden"
+      role="timer"
+      aria-live="polite"
+      aria-label={`${days} days ${hours} hours ${minutes} minutes ${seconds} seconds until the show`}
+    >
+      <Segment value={days} label="Days" />
+      <Divider />
+      <Segment value={hours} label="Hours" />
+      <Divider />
+      <Segment value={minutes} label="Minutes" />
+      <Divider />
+      <Segment value={seconds} label="Seconds" />
     </div>
   );
 }

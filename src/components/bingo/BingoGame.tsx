@@ -11,8 +11,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-const POINTS_PER_BINGO = 1;
-
 function createEmptyMarked(): boolean[][] {
   return Array(GRID_ROWS)
     .fill(null)
@@ -22,7 +20,6 @@ function createEmptyMarked(): boolean[][] {
 export function BingoGame() {
   const [card, setCard] = useState(() => generateCard());
   const [marked, setMarked] = useState<boolean[][]>(() => createEmptyMarked());
-  const [points, setPoints] = useState(0);
   const [hasWon, setHasWon] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [expandedPhrase, setExpandedPhrase] = useState<string | null>(null);
@@ -47,7 +44,6 @@ export function BingoGame() {
         if (!currentlyMarked && checkWin(next)) {
           setHasWon(true);
           setShowCelebration(true);
-          setPoints((p) => p + POINTS_PER_BINGO);
         }
         return next;
       });
@@ -57,16 +53,13 @@ export function BingoGame() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between gap-4">
-        <p className="text-sm font-medium text-muted-foreground">
-          Wins: <span className="text-foreground tabular-nums">{points}</span>
-        </p>
-        {hasWon && (
+      {hasWon && (
+        <div className="flex justify-end">
           <Button onClick={handlePlayAgain} size="sm">
             Play again
           </Button>
-        )}
-      </div>
+        </div>
+      )}
 
       {showCelebration && (
         <div
@@ -77,7 +70,7 @@ export function BingoGame() {
             Bingo!
           </p>
           <p className="text-sm text-muted-foreground">
-            +{POINTS_PER_BINGO} point. Get a new card and keep playing.
+            Get a new card and keep playing.
           </p>
         </div>
       )}
