@@ -45,8 +45,8 @@ function AvatarContent() {
     }
 
     if (isPreview) {
-      // In preview mode, just go to party (or stay); don't persist
-      router.push("/party");
+      // In preview mode, just go to ballot (or stay); don't persist
+      router.push("/ballot");
       return;
     }
 
@@ -61,8 +61,8 @@ function AvatarContent() {
       nickname: nickname.trim(),
     });
 
-    // Navigate to party page
-    router.push("/party");
+    // Navigate to My Ballots (default post-login area)
+    router.push("/ballot");
   };
 
   return (

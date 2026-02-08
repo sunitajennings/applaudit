@@ -9,6 +9,8 @@ import { useAuth } from "@/lib/store/auth";
 import { useUser } from "@/lib/store/user";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 
+const DEFAULT_GROUP_ID = "default";
+
 function handleJoinHostBeta() {
   // Prototype: no DB. Later: call API to store "interested in host beta" (e.g. user id + timestamp).
   console.log("[Join host beta] Interested — would store in DB later.");
@@ -17,7 +19,12 @@ function handleJoinHostBeta() {
 export default function JoinPage() {
   const router = useRouter();
   const { user } = useAuth();
-  const { profile } = useUser();
+  const { profile, updateProfile } = useUser();
+
+  const handlePretendAdded = () => {
+    updateProfile({ groupId: DEFAULT_GROUP_ID });
+    router.push("/ballot");
+  };
 
   // Redirect if not authenticated or profile incomplete
   useEffect(() => {
@@ -58,7 +65,7 @@ export default function JoinPage() {
 
           {/* Pretend you were added — prototype advance */}
           <Button
-            onClick={() => router.push("/ballot")}
+            onClick={handlePretendAdded}
             className="w-full"
             size="2xl"
           >

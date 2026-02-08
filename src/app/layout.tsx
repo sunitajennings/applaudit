@@ -26,6 +26,7 @@ export const metadata: Metadata = {
 };
 
 import { GlobalNav } from "@/components/layout/GlobalNav";
+import { NavCenterProvider } from "@/lib/store/nav-center";
 
 export default function RootLayout({
   children,
@@ -39,10 +40,12 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <AuthProvider>
-            <GlobalNav />
-            <div className="max-w-4xl w-full mx-auto">
-              {children}
-            </div>
+            <NavCenterProvider>
+              <GlobalNav />
+              <div className="max-w-4xl w-full mx-auto">
+                {children}
+              </div>
+            </NavCenterProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>

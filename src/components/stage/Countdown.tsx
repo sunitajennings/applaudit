@@ -1,15 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
-const DEFAULT_EVENT_ISO = "2026-03-02T01:00:00.000Z"; // Oscars 2026 example
-
-function getEventDate(): Date | null {
-  if (typeof window === "undefined") return null;
-  const iso = process.env.NEXT_PUBLIC_EVENT_START_ISO ?? DEFAULT_EVENT_ISO;
-  const date = new Date(iso);
-  return Number.isNaN(date.getTime()) ? null : date;
-}
+import { getEventStartDate } from "@/data/oscar-2026";
 
 function Segment({
   value,
@@ -40,7 +32,7 @@ function Divider() {
 }
 
 export function Countdown() {
-  const eventDate = getEventDate();
+  const eventDate = getEventStartDate();
   const [now, setNow] = useState(() => (typeof window !== "undefined" ? Date.now() : 0));
   const [mounted, setMounted] = useState(false);
 
@@ -52,8 +44,13 @@ export function Countdown() {
 
   if (!mounted || !eventDate) {
     return (
-      <div className="text-center text-gold text-sm">
-        Event time not set
+      <div className="space-y-2">
+        <p className="text-center text-gold text-sm font-medium">
+          Showtime begins in
+        </p>
+        <div className="text-center text-gold text-sm">
+          Event time not set
+        </div>
       </div>
     );
   }
@@ -76,19 +73,24 @@ export function Countdown() {
   const days = Math.floor(diff / 86400000);
 
   return (
-    <div
-      className="countdown-gradient flex items-stretch rounded-full border border-gold/50 shadow-sm overflow-hidden"
-      role="timer"
-      aria-live="polite"
-      aria-label={`${days} days ${hours} hours ${minutes} minutes ${seconds} seconds until the show`}
-    >
-      <Segment value={days} label="Days" />
-      <Divider />
-      <Segment value={hours} label="Hours" />
-      <Divider />
-      <Segment value={minutes} label="Minutes" />
-      <Divider />
-      <Segment value={seconds} label="Seconds" />
+    <div className="space-y-2">
+      <p className="text-center text-gold text-sm uppercase tracking-wider font-medium">
+        Showtime begins in
+      </p>
+      <div
+        className="countdown-gradient flex items-stretch rounded-full border border-gold/50 shadow-sm overflow-hidden"
+        role="timer"
+        aria-live="polite"
+        aria-label={`${days} days ${hours} hours ${minutes} minutes ${seconds} seconds until the show`}
+      >
+        <Segment value={days} label="Days" />
+        <Divider />
+        <Segment value={hours} label="Hours" />
+        <Divider />
+        <Segment value={minutes} label="Minutes" />
+        <Divider />
+        <Segment value={seconds} label="Seconds" />
+      </div>
     </div>
   );
 }

@@ -8,6 +8,7 @@ const STORAGE_KEY = "applaudit_user";
 export type UserProfile = {
   nickname: string;
   avatarId: string; // ID of selected avatar (1-8) or empty for initials-based
+  groupId: string | null; // group/party the user has joined
 };
 
 type UserContextType = {
@@ -26,7 +27,12 @@ function loadStoredProfile(): UserProfile | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored) as Partial<UserProfile> & { nickname?: string; avatarId?: string };
+      return {
+        nickname: parsed.nickname ?? "",
+        avatarId: parsed.avatarId ?? "",
+        groupId: parsed.groupId ?? null,
+      };
     }
   } catch (e) {
     console.error("Failed to load user profile:", e);
@@ -86,6 +92,7 @@ export function UserProvider({ children }: UserProviderProps) {
         return {
           nickname: updates.nickname || "",
           avatarId: updates.avatarId || "",
+          groupId: updates.groupId ?? null,
         };
       }
       return { ...prev, ...updates };

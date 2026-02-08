@@ -10,6 +10,7 @@ import { useAuth } from "@/lib/store/auth";
 import { useUser } from "@/lib/store/user";
 import { Countdown } from "@/components/stage/Countdown";
 import { IllustrationPlaceholder } from "@/components/shared/IllustrationPlaceholder";
+import { BallotList } from "@/components/ballot/BallotList";
 
 export default function BallotPage() {
   const router = useRouter();
@@ -31,15 +32,6 @@ export default function BallotPage() {
     <AppShell variant="dark" showLogo={true} showAvatar={false}>
       <PageTransition className="max-w-md mx-auto w-full">
         <div className="space-y-6">
-          <p className="text-sm">
-            <Link
-              href="/party?stay=1"
-              className="text-muted-foreground hover:text-foreground underline"
-            >
-              Back to join
-            </Link>
-          </p>
-
           <Countdown />
 
           <Link
@@ -91,14 +83,12 @@ export default function BallotPage() {
             </div>
           </Link>
 
-          <div className="space-y-4">
-            <h2 className="text-xl font-display font-bold">My Ballots</h2>
-            <div className="text-center space-y-2 py-4">
-              <p className="text-muted-foreground text-sm">
-                Your predictions will go here.
-              </p>
-            </div>
-          </div>
+          {user && (
+            <BallotList
+              userId={user.id}
+              groupId={profile?.groupId ?? null}
+            />
+          )}
         </div>
       </PageTransition>
     </AppShell>
