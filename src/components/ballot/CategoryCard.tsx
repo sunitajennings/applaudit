@@ -28,7 +28,7 @@ export function CategoryCard({
       <CardHeader className="px-0 pt-0 shrink-0">
         <CardTitle className="text-lg font-display">{category.name}</CardTitle>
       </CardHeader>
-      <CardContent className="px-0 pb-0 flex-1 min-h-0 flex flex-col min-w-0">
+      <CardContent className="px-0 pb-0 flex-1 min-h-0 flex flex-col min-w-0 overflow-y-auto">
         <RadioGroup
           name={`category-${category.id}`}
           value={selectedNomineeId}
