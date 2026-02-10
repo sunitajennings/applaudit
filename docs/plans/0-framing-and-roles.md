@@ -18,7 +18,9 @@ In this version, there can only be one award-show at a time.
 
 ### Ballot 
 A user's predictions for an award-show. 
-Predictions are made per award-show category, i.e. which nominee will win each category. A ballot can also have a user-specified name. A user can have multiple ballots for a single award-show.
+Predictions are made per award-show category, i.e. which nominee will win each category. A ballot can also have a user-specified name. A user can have multiple ballots for a single award-show. 
+
+A user must be part of a group to create a ballot.
 
 Ballots are only user-editable when the award-show is "upcoming".
 Ballot categories will have a computed score of 0 or 1, based on whether the prediction matches the award-show category winner.
@@ -31,18 +33,9 @@ A set of users that can see each other's ballots for an award-show.
 
 Any user can create a new group. The creator of the group is called the "host". The host invites users to the group and users will "click to join". 
 
+A user can be part of multiple groups. Their ballots are scoped to an individual group. Users can copy ballots between groups
+
 An admin can do everything any host can do.
-
-#### Open question
-Are ballots strongly associated with a
-
-- [ ] _group_ or
-- [ ] _user_?
-
-
-* Option A (group): If the ballot is strongly associated with a group, a user can only create a ballot once they've joined a group. If they join multiple groups they can copy their ballot over.
-
-* Option B (user): If the ballot is strongly associated with the user, a user can create a ballot before they join a group. And then they can share their ballot with the group. 
 
 ## Joining a group (invitation flow)
 
