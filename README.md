@@ -106,14 +106,6 @@ npm run lint      # Run ESLint
 
 Push to `main` branch. Vercel auto-deploys from GitHub.
 
-## Roles
-
-| Role | Abilities |
-|------|-----------|
-| Admin | Toggle live mode on/off |
-| Host | Identified as party host (no special permissions) |
-| Participant | Enter actual winners, vote, view ballots |
-
 ## Contributing
 
 1. Create a branch from `main`
