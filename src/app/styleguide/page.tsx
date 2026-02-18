@@ -402,7 +402,7 @@ export default function StyleguidePage() {
                     <div className="flex flex-wrap items-center gap-3">
                       <Button size="xs" className="rounded-full">Extra Small</Button>
                       <Button size="sm" className="rounded-full">Small</Button>
-                      <Button size="default" className="rounded-full">Default</Button>
+                      <Button size="lg" className="rounded-full">Default</Button>
                       <Button size="lg" className="rounded-full">Large</Button>
                     </div>
                   </div>

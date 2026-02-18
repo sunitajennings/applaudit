@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/lib/store/auth";
+import { useNavCenter } from "@/lib/store/nav-center";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { Avatar } from "@/components/shared/Avatar";
 import { Button } from "@/components/ui/button";
@@ -18,7 +20,12 @@ interface GlobalNavProps {
 }
 
 export function GlobalNav({ className }: GlobalNavProps) {
+  const pathname = usePathname();
   const { user, isAuthenticated, isLoading, getInitials } = useAuth();
+  const { centerContent } = useNavCenter();
+
+  const isPublicPage = pathname === "/";
+  const useConstrainedWidth = !isLoading && isAuthenticated && !isPublicPage;
 
   const avatarInitials = user
     ? user.nickname
@@ -33,11 +40,16 @@ export function GlobalNav({ className }: GlobalNavProps) {
         className
       )}
     >
-      <div className="max-w-4xl w-full mx-auto px-6">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo: logomark when logged in, full logo when not */}
+      <div
+        className={cn(
+          "w-full mx-auto",
+          useConstrainedWidth ? "max-w-md px-4" : "px-6"
+        )}
+      >
+        <div className="flex h-16 items-center justify-between gap-4">
+          {/* Logo: logomark when logged in (and not on public home), full logo when not */}
           <Link href="/" className="flex items-center shrink-0">
-            {!isLoading && isAuthenticated ? (
+            {useConstrainedWidth ? (
               <ThemedImage
                 lightSrc="/images/logos/logobug.svg"
                 darkSrc="/images/logos/logobug_dark.svg"
@@ -58,21 +70,32 @@ export function GlobalNav({ className }: GlobalNavProps) {
             )}
           </Link>
 
-          {/* Right side: avatar when logged in, login link when not */}
-          {!isLoading && isAuthenticated ? (
-            <div className="flex items-center">
+          {/* Center: optional content (e.g. ballot back + title), flexes full width between logo and avatar */}
+          {centerContent != null ? (
+            <div className="flex flex-1 min-w-0 items-center justify-center overflow-hidden">
+              {centerContent}
+            </div>
+          ) : (
+            <div className="flex-1 min-w-0" aria-hidden />
+          )}
+
+          {/* Right side: avatar when logged in (and not on public home), login link when not */}
+          {useConstrainedWidth ? (
+            <div className="flex items-center shrink-0">
               <Avatar
                 initials={avatarInitials}
                 imageUrl={user?.avatarUrl}
                 size="sm"
-                className="shrink-0"
+                className="shrink-0 bg-primary text-primary-foreground"
               />
             </div>
           ) : !isLoading ? (
             <Button asChild variant="link" size="icon-lg">
               <Link href="/login">Login</Link>
             </Button>
-          ) : null}
+          ) : (
+            <div className="w-16 shrink-0" aria-hidden />
+          )}
         </div>
       </div>
     </nav>
