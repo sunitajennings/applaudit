@@ -4,11 +4,10 @@ import { createClient } from "@/lib/supabase/server";
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get("code");
-  let type = searchParams.get("type");
+  const type = searchParams.get("type");
+  const redirectTo = new URL("/login", request.url);
 
   if (type == null) redirectTo.searchParams.set("error", "unrecognized_type");
-
-  const redirectTo = new URL("/login", request.url);
 
   if (token_hash) {
     const supabase = await createClient();
