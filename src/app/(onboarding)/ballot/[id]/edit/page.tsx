@@ -83,7 +83,7 @@ export default function EditBallotPage() {
   if (!profile?.nickname || !profile?.avatarId) {
     return null;
   }
-  if (!ballot || ballot.userId !== user.id || isEventStarted()) {
+  if (!user || !ballot || ballot.userId !== user.id || isEventStarted()) {
     return null;
   }
 
