@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { AvatarPicker } from "@/components/shared/AvatarPicker";
 import { useSession } from "@/lib/store/session";
 import { cn } from "@/lib/utils";
-import { IllustrationPlaceholder } from "@/components/shared/IllustrationPlaceholder";
 import { updateProfileInDb } from "@/lib/queries/profiles";
 import { createClient } from "@/lib/supabase/client";
 
