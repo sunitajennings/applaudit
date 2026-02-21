@@ -1,19 +1,30 @@
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/lib/supabase/proxy";
 
 export async function proxy(request: NextRequest) {
-  return await updateSession(request);
+  const { response, user } = await updateSession(request);
+
+  const { pathname, searchParams } = request.nextUrl;
+
+  // /avatar?preview is public — lets devs view the page without auth
+  if (pathname === "/avatar" && searchParams.has("preview")) {
+    return response;
+  }
+
+  if (pathname === "/login") {
+    // Authenticated users don't need to be on /login
+    if (user) return NextResponse.redirect(new URL("/ballot", request.url));
+    return response;
+  }
+
+  // All other matched routes are protected
+  if (!user) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  return response;
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
-  ],
+  matcher: ["/ballot/:path*", "/party", "/avatar", "/login"],
 };

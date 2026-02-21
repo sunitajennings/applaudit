@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 
 interface ThemedImageProps {
   lightSrc: string;
@@ -24,26 +23,8 @@ export function ThemedImage({
   className,
 }: ThemedImageProps) {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Prevent hydration mismatch by showing light version until mounted
-  if (!mounted) {
-    return (
-      <Image
-        src={lightSrc}
-        alt={alt}
-        width={width}
-        height={height}
-        priority={priority}
-        className={className}
-      />
-    );
-  }
-
+  // resolvedTheme is undefined until theme resolves on the client — use light as default
   const src = resolvedTheme === "dark" ? darkSrc : lightSrc;
 
   return (

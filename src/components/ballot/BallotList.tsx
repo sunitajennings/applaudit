@@ -6,7 +6,6 @@ import { Plus, Tickets } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getBallotsByUser } from "@/lib/ballot/storage";
 import { isEventStarted } from "@/data/oscar-2026";
-import { cn } from "@/lib/utils";
 
 interface BallotListProps {
   userId: string;
@@ -66,7 +65,12 @@ export function BallotList({ userId, groupId }: BallotListProps) {
                     >
                       {cardBody}
                     </Link>
-                    <Button asChild variant="secondary" size="lg" className="shrink-0 rounded-full">
+                    <Button
+                      asChild
+                      variant="secondary"
+                      size="lg"
+                      className="shrink-0 rounded-full"
+                    >
                       <Link href={editHref}>Edit</Link>
                     </Button>
                   </div>

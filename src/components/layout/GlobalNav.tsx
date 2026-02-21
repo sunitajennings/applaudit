@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/lib/store/auth";
+import { useSession } from "@/lib/store/session";
 import { useNavCenter } from "@/lib/store/nav-center";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { Avatar } from "@/components/shared/Avatar";
@@ -21,29 +21,34 @@ interface GlobalNavProps {
 
 export function GlobalNav({ className }: GlobalNavProps) {
   const pathname = usePathname();
-  const { user, isAuthenticated, isLoading, getInitials } = useAuth();
+  const { user, profile, isAuthenticated, isLoading, getInitials } =
+    useSession();
   const { centerContent } = useNavCenter();
 
   const isPublicPage = pathname === "/";
   const useConstrainedWidth = !isLoading && isAuthenticated && !isPublicPage;
 
-  const avatarInitials = user
-    ? user.nickname
-      ? getInitials(user.nickname)
-      : getInitialsFromEmail(user.email)
-    : "??";
+  const profileInitials = profile?.nickname
+    ? getInitials(profile.nickname)
+    : null;
+
+  const userEmailInitials = user?.email
+    ? getInitialsFromEmail(user.email)
+    : null;
+
+  const avatarInitials = profileInitials || userEmailInitials || "??";
 
   return (
     <nav
       className={cn(
         "w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-        className
+        className,
       )}
     >
       <div
         className={cn(
           "w-full mx-auto",
-          useConstrainedWidth ? "max-w-md px-4" : "px-6"
+          useConstrainedWidth ? "max-w-md px-4" : "px-6",
         )}
       >
         <div className="flex h-16 items-center justify-between gap-4">
@@ -84,7 +89,6 @@ export function GlobalNav({ className }: GlobalNavProps) {
             <div className="flex items-center shrink-0">
               <Avatar
                 initials={avatarInitials}
-                imageUrl={user?.avatarUrl}
                 size="sm"
                 className="shrink-0 bg-primary text-primary-foreground"
               />

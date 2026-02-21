@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthProvider as AuthProviderBase } from "@/lib/store/auth";
+import { SessionProvider } from "@/lib/store/session";
 import { ReactNode } from "react";
 
 interface AuthProviderWrapperProps {
@@ -8,5 +8,5 @@ interface AuthProviderWrapperProps {
 }
 
 export function AuthProvider({ children }: AuthProviderWrapperProps) {
-  return <AuthProviderBase>{children}</AuthProviderBase>;
+  return <SessionProvider>{children}</SessionProvider>;
 }

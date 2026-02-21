@@ -9,32 +9,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ThemedImage } from "@/components/shared/ThemedImage";
-import { useAuth } from "@/lib/store/auth";
-import { useUser } from "@/lib/store/user";
+import { useSession } from "@/lib/store/session";
 import { createBallot } from "@/lib/ballot/storage";
 import { AWARD_SHOW_ID } from "@/data/oscar-2026";
 
 export default function NewBallotPage() {
   const router = useRouter();
-  const { user } = useAuth();
-  const { profile } = useUser();
+  const { user, profile, isLoading } = useSession();
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-    if (!profile?.nickname || !profile?.avatarId) {
+    if (isLoading) return;
+    if (!profile?.nickname) {
       router.push("/avatar");
       return;
     }
     if (profile.groupId == null) {
       router.push("/party");
-      return;
     }
-  }, [user, profile, router]);
+  }, [isLoading, profile, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,11 +39,16 @@ export default function NewBallotPage() {
       return;
     }
     if (!user || !profile?.groupId) return;
-    const ballot = createBallot(user.id, profile.groupId, AWARD_SHOW_ID, trimmed);
+    const ballot = createBallot(
+      user.id,
+      profile.groupId,
+      AWARD_SHOW_ID,
+      trimmed,
+    );
     router.push(`/ballot/${ballot.id}/edit`);
   };
 
-  if (!user || !profile?.nickname || !profile?.avatarId || profile.groupId == null) {
+  if (!profile?.nickname || !profile?.avatarId || profile.groupId == null) {
     return null;
   }
 
@@ -71,8 +70,13 @@ export default function NewBallotPage() {
           </div>
 
           {/* Dark Card */}
-          <Card variant="dark" className="w-full rounded-2xl p-8 border-0 gap-0">
-            <h1 className="text-2xl font-display font-bold mb-2">Name your ballot</h1>
+          <Card
+            variant="dark"
+            className="w-full rounded-2xl p-8 border-0 gap-0"
+          >
+            <h1 className="text-2xl font-display font-bold mb-2">
+              Name your ballot
+            </h1>
             <p className="text-muted-foreground mb-6">
               Give your predictions a name so you can tell them apart.
             </p>
@@ -95,11 +99,14 @@ export default function NewBallotPage() {
                   className="w-full"
                   autoFocus
                 />
-                {error && (
-                  <p className="text-sm text-destructive">{error}</p>
-                )}
+                {error && <p className="text-sm text-destructive">{error}</p>}
               </div>
-              <Button type="submit" className="w-full h-12" size="lg" disabled={!name.trim()}>
+              <Button
+                type="submit"
+                className="w-full h-12"
+                size="lg"
+                disabled={!name.trim()}
+              >
                 Continue
               </Button>
             </form>
