@@ -29,7 +29,7 @@ export default function EditBallotPage() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!profile?.nickname || !profile?.avatarId) {
+    if (!profile?.nickname) {
       router.push("/avatar");
     }
   }, [isLoading, profile, router]);

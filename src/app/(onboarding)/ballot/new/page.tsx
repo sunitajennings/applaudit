@@ -21,7 +21,7 @@ export default function NewBallotPage() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!profile?.nickname || !profile?.avatarId) {
+    if (!profile?.nickname) {
       router.push("/avatar");
       return;
     }
@@ -39,7 +39,12 @@ export default function NewBallotPage() {
       return;
     }
     if (!user || !profile?.groupId) return;
-    const ballot = createBallot(user.id, profile.groupId, AWARD_SHOW_ID, trimmed);
+    const ballot = createBallot(
+      user.id,
+      profile.groupId,
+      AWARD_SHOW_ID,
+      trimmed,
+    );
     router.push(`/ballot/${ballot.id}/edit`);
   };
 
@@ -65,8 +70,13 @@ export default function NewBallotPage() {
           </div>
 
           {/* Dark Card */}
-          <Card variant="dark" className="w-full rounded-2xl p-8 border-0 gap-0">
-            <h1 className="text-2xl font-display font-bold mb-2">Name your ballot</h1>
+          <Card
+            variant="dark"
+            className="w-full rounded-2xl p-8 border-0 gap-0"
+          >
+            <h1 className="text-2xl font-display font-bold mb-2">
+              Name your ballot
+            </h1>
             <p className="text-muted-foreground mb-6">
               Give your predictions a name so you can tell them apart.
             </p>
@@ -89,11 +99,14 @@ export default function NewBallotPage() {
                   className="w-full"
                   autoFocus
                 />
-                {error && (
-                  <p className="text-sm text-destructive">{error}</p>
-                )}
+                {error && <p className="text-sm text-destructive">{error}</p>}
               </div>
-              <Button type="submit" className="w-full h-12" size="lg" disabled={!name.trim()}>
+              <Button
+                type="submit"
+                className="w-full h-12"
+                size="lg"
+                disabled={!name.trim()}
+              >
                 Continue
               </Button>
             </form>
