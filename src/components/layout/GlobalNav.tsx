@@ -89,7 +89,6 @@ export function GlobalNav({ className }: GlobalNavProps) {
             <div className="flex items-center shrink-0">
               <Avatar
                 initials={avatarInitials}
-                imageUrl={user?.avatarUrl}
                 size="sm"
                 className="shrink-0 bg-primary text-primary-foreground"
               />

@@ -123,7 +123,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
       userId: string,
       email: string,
       storedAvatarId: string,
-      storedGroupId: string | null
+      storedGroupId: string | null,
     ) => {
       console.log("[session] loadProfile called for", userId);
       try {
@@ -135,14 +135,21 @@ export function SessionProvider({ children }: SessionProviderProps) {
           groupId: storedGroupId,
         });
       } catch (err) {
-        console.error("Failed to load profile, falling back to basic user:", err);
+        console.error(
+          "Failed to load profile, falling back to basic user:",
+          err,
+        );
         setUser({ id: userId, email });
-        setProfile({ nickname: "", avatarId: storedAvatarId, groupId: storedGroupId });
+        setProfile({
+          nickname: "",
+          avatarId: storedAvatarId,
+          groupId: storedGroupId,
+        });
       } finally {
         setIsProfileLoaded(true);
       }
     },
-    [supabase]
+    [supabase],
   );
 
   // Hydrate: check Supabase session first, then fall back to localStorage
@@ -159,7 +166,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
           data.user.id,
           data.user.email!,
           stored.avatarId,
-          stored.groupId
+          stored.groupId,
         );
       } else {
         setUser(stored.user);
@@ -170,7 +177,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
                 avatarId: stored.avatarId,
                 groupId: stored.groupId,
               }
-            : null
+            : null,
         );
         setIsProfileLoaded(true);
       }
@@ -194,7 +201,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
           session.user.id,
           session.user.email!,
           stored.avatarId,
-          stored.groupId
+          stored.groupId,
         );
         setPendingEmail(null);
       }
@@ -206,7 +213,12 @@ export function SessionProvider({ children }: SessionProviderProps) {
   // Save state to localStorage when it changes
   useEffect(() => {
     if (isHydrated) {
-      console.log("[session] saving state, user =", user?.id, "hydrated =", isHydrated);
+      console.log(
+        "[session] saving state, user =",
+        user?.id,
+        "hydrated =",
+        isHydrated,
+      );
       saveState({
         user,
         pendingEmail,
@@ -226,7 +238,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
       });
       return { error: error?.message ?? null };
     },
-    [supabase]
+    [supabase],
   );
 
   const resendOtp = useCallback(
@@ -237,7 +249,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
       });
       return { error: error?.message ?? null };
     },
-    [supabase]
+    [supabase],
   );
 
   const completeSignIn = useCallback(() => {
@@ -277,7 +289,9 @@ export function SessionProvider({ children }: SessionProviderProps) {
     });
   }, []);
 
-  const isProfileComplete = !!(profile?.nickname && profile.nickname.trim().length > 0);
+  const isProfileComplete = !!(
+    profile?.nickname && profile.nickname.trim().length > 0
+  );
 
   const value: SessionContextType = {
     user,
