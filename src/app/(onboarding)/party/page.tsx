@@ -18,7 +18,7 @@ function handleJoinHostBeta() {
 
 export default function JoinPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const { profile, updateProfile } = useUser();
 
   const handlePretendAdded = () => {
@@ -31,6 +31,7 @@ export default function JoinPage() {
   const hasCompleteProfile = profile?.nickname || user?.nickname;
 
   useEffect(() => {
+    if (isLoading) return;
     if (!user) {
       router.push("/login");
       return;
@@ -39,7 +40,9 @@ export default function JoinPage() {
       router.push("/avatar");
       return;
     }
-  }, [user, hasCompleteProfile, router]);
+  }, [user, isLoading, hasCompleteProfile, router]);
+
+  if (isLoading) return null;
 
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>

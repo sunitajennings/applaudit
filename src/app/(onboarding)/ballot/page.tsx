@@ -14,10 +14,11 @@ import { BallotList } from "@/components/ballot/BallotList";
 
 export default function BallotPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   const { profile } = useUser();
 
   useEffect(() => {
+    if (isLoading) return;
     if (!user) {
       router.push("/login");
       return;
@@ -26,7 +27,9 @@ export default function BallotPage() {
       router.push("/avatar");
       return;
     }
-  }, [user, profile, router]);
+  }, [user, isLoading, profile, router]);
+
+  if (isLoading) return null;
 
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>
