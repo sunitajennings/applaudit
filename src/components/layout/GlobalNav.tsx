@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/lib/store/auth";
+import { useSession } from "@/lib/store/session";
 import { useNavCenter } from "@/lib/store/nav-center";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { Avatar } from "@/components/shared/Avatar";
@@ -21,7 +21,7 @@ interface GlobalNavProps {
 
 export function GlobalNav({ className }: GlobalNavProps) {
   const pathname = usePathname();
-  const { user, isAuthenticated, isLoading, getInitials } = useAuth();
+  const { user, isAuthenticated, isLoading, getInitials } = useSession();
   const { centerContent } = useNavCenter();
 
   const isPublicPage = pathname === "/";

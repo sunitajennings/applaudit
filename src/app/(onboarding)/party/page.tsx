@@ -5,8 +5,7 @@ import { useRouter } from "next/navigation";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/store/auth";
-import { useUser } from "@/lib/store/user";
+import { useSession } from "@/lib/store/session";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 
 const DEFAULT_GROUP_ID = "default";
@@ -18,22 +17,21 @@ function handleJoinHostBeta() {
 
 export default function JoinPage() {
   const router = useRouter();
-  const { user } = useAuth();
-  const { profile, updateProfile } = useUser();
+  const { profile, updateProfile, isLoading } = useSession();
 
   const handlePretendAdded = () => {
     updateProfile({ groupId: DEFAULT_GROUP_ID });
     router.push("/ballot");
   };
 
-  // Check both localStorage profile (UserProvider) and DB-sourced auth user as fallback
-  const hasCompleteProfile = profile?.nickname || user?.nickname;
+  const hasCompleteProfile = profile?.nickname;
 
   useEffect(() => {
+    if (isLoading) return;
     if (!hasCompleteProfile) {
       router.push("/avatar");
     }
-  }, [hasCompleteProfile, router]);
+  }, [isLoading, hasCompleteProfile, router]);
 
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>

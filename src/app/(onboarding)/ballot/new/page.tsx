@@ -9,19 +9,18 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ThemedImage } from "@/components/shared/ThemedImage";
-import { useAuth } from "@/lib/store/auth";
-import { useUser } from "@/lib/store/user";
+import { useSession } from "@/lib/store/session";
 import { createBallot } from "@/lib/ballot/storage";
 import { AWARD_SHOW_ID } from "@/data/oscar-2026";
 
 export default function NewBallotPage() {
   const router = useRouter();
-  const { user } = useAuth();
-  const { profile } = useUser();
+  const { user, profile, isLoading } = useSession();
   const [name, setName] = useState("");
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (isLoading) return;
     if (!profile?.nickname || !profile?.avatarId) {
       router.push("/avatar");
       return;
@@ -29,7 +28,7 @@ export default function NewBallotPage() {
     if (profile.groupId == null) {
       router.push("/party");
     }
-  }, [profile, router]);
+  }, [isLoading, profile, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

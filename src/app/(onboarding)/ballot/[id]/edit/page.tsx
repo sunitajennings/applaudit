@@ -7,8 +7,7 @@ import { ChevronLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { AppShell } from "@/components/layout/AppShell";
-import { useAuth } from "@/lib/store/auth";
-import { useUser } from "@/lib/store/user";
+import { useSession } from "@/lib/store/session";
 import { useNavCenter } from "@/lib/store/nav-center";
 import { getBallotById, getChoicesForBallot, updateBallot } from "@/lib/ballot/storage";
 import { BallotVoting } from "@/components/ballot/BallotVoting";
@@ -17,8 +16,7 @@ import { isEventStarted } from "@/data/oscar-2026";
 export default function EditBallotPage() {
   const router = useRouter();
   const params = useParams();
-  const { user } = useAuth();
-  const { profile } = useUser();
+  const { user, profile, isLoading } = useSession();
   const { setCenterContent } = useNavCenter();
   const id = params.id as string;
 
@@ -32,10 +30,11 @@ export default function EditBallotPage() {
   );
 
   useEffect(() => {
+    if (isLoading) return;
     if (!profile?.nickname || !profile?.avatarId) {
       router.push("/avatar");
     }
-  }, [profile, router]);
+  }, [isLoading, profile, router]);
 
   useEffect(() => {
     if (!user) return;

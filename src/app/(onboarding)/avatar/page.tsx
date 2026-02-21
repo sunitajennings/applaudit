@@ -8,8 +8,7 @@ import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { AvatarPicker } from "@/components/shared/AvatarPicker";
-import { useUser } from "@/lib/store/user";
-import { useAuth } from "@/lib/store/auth";
+import { useSession } from "@/lib/store/session";
 import { cn } from "@/lib/utils";
 import { IllustrationPlaceholder } from "@/components/shared/IllustrationPlaceholder";
 import { updateProfileInDb } from "@/lib/queries/profiles";
@@ -19,8 +18,7 @@ function AvatarContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const isPreview = searchParams.get("preview") !== null;
-  const { user, updateUser } = useAuth();
-  const { profile, updateProfile } = useUser();
+  const { user, profile, updateProfile } = useSession();
   const [nickname, setNickname] = useState(profile?.nickname || "");
   const [selectedAvatarId, setSelectedAvatarId] = useState(
     profile?.avatarId || "",
@@ -56,13 +54,7 @@ function AvatarContent() {
       }
     }
 
-    // Update localStorage profile
     updateProfile({
-      nickname: nickname.trim(),
-    });
-
-    // Update auth user in memory
-    updateUser({
       nickname: nickname.trim(),
     });
 

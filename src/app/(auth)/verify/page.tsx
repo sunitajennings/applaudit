@@ -5,13 +5,13 @@ import { useState } from "react";
 import { Mail, ExternalLink, RefreshCw } from "lucide-react";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/store/auth";
+import { useSession } from "@/lib/store/session";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { Card } from "@/components/ui/card";
 
 export default function VerifyPage() {
   const router = useRouter();
-  const { pendingEmail, resendOtp } = useAuth();
+  const { pendingEmail, resendOtp } = useSession();
   const [resendState, setResendState] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");

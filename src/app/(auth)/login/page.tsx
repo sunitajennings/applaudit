@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { EmailForm } from "@/components/auth/EmailForm";
-import { useAuth } from "@/lib/store/auth";
+import { useSession } from "@/lib/store/session";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { Card } from "@/components/ui/card";
 
 export default function LoginPage() {
   const router = useRouter();
-  const { signInWithEmail } = useAuth();
+  const { signInWithEmail } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

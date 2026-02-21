@@ -6,22 +6,21 @@ import { useRouter } from "next/navigation";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/store/auth";
-import { useUser } from "@/lib/store/user";
+import { useSession } from "@/lib/store/session";
 import { Countdown } from "@/components/stage/Countdown";
 import { IllustrationPlaceholder } from "@/components/shared/IllustrationPlaceholder";
 import { BallotList } from "@/components/ballot/BallotList";
 
 export default function BallotPage() {
   const router = useRouter();
-  const { user } = useAuth();
-  const { profile } = useUser();
+  const { user, profile, isLoading } = useSession();
 
   useEffect(() => {
+    if (isLoading) return;
     if (!profile?.nickname) {
       router.push("/avatar");
     }
-  }, [profile, router]);
+  }, [isLoading, profile, router]);
 
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>

@@ -5,14 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { PageTransition } from "@/components/layout/PageTransition";
-import { useAuth } from "@/lib/store/auth";
+import { useSession } from "@/lib/store/session";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { Card } from "@/components/ui/card";
 
 function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { completeSignIn, isProfileLoaded, isProfileComplete } = useAuth();
+  const { completeSignIn, isProfileLoaded, isProfileComplete } = useSession();
 
   // Skip redirect when ?stay or ?noRedirect is in the URL (for working on this page)
   const skipRedirect = searchParams.has("stay") || searchParams.has("noRedirect");

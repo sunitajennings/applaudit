@@ -8,18 +8,19 @@ import { PageTransition } from "@/components/layout/PageTransition";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { ThemedImage } from "@/components/shared/ThemedImage";
-import { useUser } from "@/lib/store/user";
+import { useSession } from "@/lib/store/session";
 import { BingoGame } from "@/components/bingo/BingoGame";
 
 export default function RedCarpetPage() {
   const router = useRouter();
-  const { profile } = useUser();
+  const { profile, isLoading } = useSession();
 
   useEffect(() => {
+    if (isLoading) return;
     if (!profile?.nickname || !profile?.avatarId) {
       router.push("/avatar");
     }
-  }, [profile, router]);
+  }, [isLoading, profile, router]);
 
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>
