@@ -22,7 +22,7 @@ export default function BallotPage() {
       router.push("/login");
       return;
     }
-    if (!profile?.nickname || !profile?.avatarId) {
+    if (!profile?.nickname) {
       router.push("/avatar");
       return;
     }
@@ -84,10 +84,7 @@ export default function BallotPage() {
           </Link>
 
           {user && (
-            <BallotList
-              userId={user.id}
-              groupId={profile?.groupId ?? null}
-            />
+            <BallotList userId={user.id} groupId={profile?.groupId ?? null} />
           )}
         </div>
       </PageTransition>

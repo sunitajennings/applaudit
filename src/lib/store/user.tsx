@@ -1,6 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, useEffect, ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+  ReactNode,
+} from "react";
 import { useAuth } from "./auth";
 
 const STORAGE_KEY = "applaudit_user";
@@ -27,10 +34,11 @@ function loadStoredProfile(): UserProfile | null {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
-      const parsed = JSON.parse(stored) as Partial<UserProfile> & { nickname?: string; avatarId?: string };
+      const parsed = JSON.parse(stored) as Partial<UserProfile> & {
+        nickname?: string;
+      };
       return {
         nickname: parsed.nickname ?? "",
-        avatarId: parsed.avatarId ?? "",
         groupId: parsed.groupId ?? null,
       };
     }
@@ -63,12 +71,19 @@ export function UserProvider({ children }: UserProviderProps) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Load profile from localStorage on mount
+  // Load profile: prefer DB-sourced data from auth context, fall back to localStorage
   useEffect(() => {
-    const stored = loadStoredProfile();
-    setProfile(stored);
+    if (user?.nickname) {
+      // DB-sourced profile via auth context takes priority
+      setProfile({
+        nickname: user.nickname,
+      });
+    } else {
+      const stored = loadStoredProfile();
+      setProfile(stored);
+    }
     setIsHydrated(true);
-  }, []);
+  }, [user?.nickname]);
 
   // Save profile to localStorage when it changes
   useEffect(() => {
@@ -91,7 +106,6 @@ export function UserProvider({ children }: UserProviderProps) {
         // Initialize profile if it doesn't exist
         return {
           nickname: updates.nickname || "",
-          avatarId: updates.avatarId || "",
           groupId: updates.groupId ?? null,
         };
       }
@@ -100,9 +114,7 @@ export function UserProvider({ children }: UserProviderProps) {
   }, []);
 
   const isProfileComplete = !!(
-    profile?.nickname &&
-    profile.nickname.trim().length > 0 &&
-    profile.avatarId
+    profile?.nickname && profile.nickname.trim().length > 0
   );
 
   const value: UserContextType = {

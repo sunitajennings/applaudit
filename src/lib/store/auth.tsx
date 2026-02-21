@@ -8,6 +8,8 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { fetchOrCreateProfile } from "@/lib/queries/profiles";
 
 const STORAGE_KEY = "applaudit_auth";
 
@@ -22,15 +24,18 @@ type AuthState = {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isProfileLoaded: boolean;
   pendingEmail: string | null;
 };
 
 type AuthContextType = AuthState & {
-  signInWithEmail: (email: string) => void;
+  signInWithEmail: (email: string) => Promise<{ error: string | null }>;
+  resendOtp: (email: string) => Promise<{ error: string | null }>;
   completeSignIn: () => void;
   signOut: () => void;
   updateUser: (updates: Partial<User>) => void;
   getInitials: (nickname: string) => string;
+  isProfileComplete: boolean;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -83,16 +88,69 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [pendingEmail, setPendingEmail] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isProfileLoaded, setIsProfileLoaded] = useState(false);
   const [isHydrated, setIsHydrated] = useState(false);
+  const [supabase] = useState(() => createClient());
 
-  // Hydrate state from localStorage on mount
+  const loadProfile = useCallback(
+    async (userId: string, email: string) => {
+      try {
+        const profile = await fetchOrCreateProfile(supabase, userId, email);
+        setUser({
+          id: userId,
+          email,
+          nickname: profile.nickname ?? undefined,
+        });
+      } catch (err) {
+        console.error(
+          "Failed to load profile, falling back to basic user:",
+          err,
+        );
+        setUser({ id: userId, email });
+      } finally {
+        setIsProfileLoaded(true);
+      }
+    },
+    [supabase],
+  );
+
+  // Hydrate: check Supabase session first, then fall back to localStorage
   useEffect(() => {
-    const stored = loadStoredState();
-    setUser(stored.user);
-    setPendingEmail(stored.pendingEmail);
-    setIsLoading(false);
-    setIsHydrated(true);
-  }, []);
+    async function init() {
+      const { data } = await supabase.auth.getUser();
+
+      if (data.user) {
+        // Real Supabase session — fetch/create profile from DB
+        await loadProfile(data.user.id, data.user.email!);
+      } else {
+        // Fall back to localStorage (supports simulate flow)
+        const stored = loadStoredState();
+        setUser(stored.user);
+        setIsProfileLoaded(true);
+      }
+
+      const stored = loadStoredState();
+      setPendingEmail(stored.pendingEmail);
+      setIsLoading(false);
+      setIsHydrated(true);
+    }
+
+    init();
+  }, [supabase, loadProfile]);
+
+  // Listen for Supabase auth state changes (e.g. returning from magic link)
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        loadProfile(session.user.id, session.user.email!);
+        setPendingEmail(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [supabase, loadProfile]);
 
   // Save state to localStorage when it changes
   useEffect(() => {
@@ -101,9 +159,41 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [user, pendingEmail, isHydrated]);
 
-  const signInWithEmail = useCallback((email: string) => {
-    setPendingEmail(email);
-  }, []);
+  const signInWithEmail = useCallback(
+    async (email: string): Promise<{ error: string | null }> => {
+      setPendingEmail(email);
+
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/callback`,
+        },
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+      return { error: null };
+    },
+    [supabase],
+  );
+
+  const resendOtp = useCallback(
+    async (email: string): Promise<{ error: string | null }> => {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/callback`,
+        },
+      });
+
+      if (error) {
+        return { error: error.message };
+      }
+      return { error: null };
+    },
+    [supabase],
+  );
 
   const completeSignIn = useCallback(() => {
     if (pendingEmail) {
@@ -116,13 +206,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }, [pendingEmail]);
 
-  const signOut = useCallback(() => {
+  const signOut = useCallback(async () => {
+    await supabase.auth.signOut();
     setUser(null);
     setPendingEmail(null);
+    setIsProfileLoaded(false);
     if (typeof window !== "undefined") {
       localStorage.removeItem(STORAGE_KEY);
     }
-  }, []);
+  }, [supabase]);
 
   const updateUser = useCallback((updates: Partial<User>) => {
     setUser((prev) => {
@@ -131,16 +223,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
     });
   }, []);
 
+  const isProfileComplete = !!user?.nickname;
+
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
     isLoading,
+    isProfileLoaded,
     pendingEmail,
     signInWithEmail,
+    resendOtp,
     completeSignIn,
     signOut,
     updateUser,
     getInitials,
+    isProfileComplete,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

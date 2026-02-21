@@ -12,6 +12,8 @@ import { useUser } from "@/lib/store/user";
 import { useAuth } from "@/lib/store/auth";
 import { cn } from "@/lib/utils";
 import { IllustrationPlaceholder } from "@/components/shared/IllustrationPlaceholder";
+import { updateProfileInDb } from "@/lib/queries/profiles";
+import { createClient } from "@/lib/supabase/client";
 
 function AvatarContent() {
   const router = useRouter();
@@ -21,9 +23,10 @@ function AvatarContent() {
   const { profile, updateProfile } = useUser();
   const [nickname, setNickname] = useState(profile?.nickname || "");
   const [selectedAvatarId, setSelectedAvatarId] = useState(
-    profile?.avatarId || ""
+    profile?.avatarId || "",
   );
   const [error, setError] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
   const [showNameLoader, setShowNameLoader] = useState(false);
   const [showNameCheck, setShowNameCheck] = useState(false);
 
@@ -34,13 +37,9 @@ function AvatarContent() {
     }
   }, [user, router, isPreview]);
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (!nickname.trim()) {
       setError("Please enter a nickname");
-      return;
-    }
-    if (!selectedAvatarId) {
-      setError("Please select an avatar");
       return;
     }
 
@@ -50,13 +49,26 @@ function AvatarContent() {
       return;
     }
 
-    // Update user profile
+    setIsSaving(true);
+
+    // Persist to DB
+    if (user) {
+      try {
+        const supabase = createClient();
+        await updateProfileInDb(supabase, user.id, {
+          nickname: nickname.trim(),
+        });
+      } catch (err) {
+        console.error("Failed to save profile to DB:", err);
+      }
+    }
+
+    // Update localStorage profile
     updateProfile({
       nickname: nickname.trim(),
-      avatarId: selectedAvatarId,
     });
 
-    // Update auth user with nickname
+    // Update auth user in memory
     updateUser({
       nickname: nickname.trim(),
     });
@@ -71,17 +83,20 @@ function AvatarContent() {
         <div className="space-y-8 mt-16">
           {/* Header */}
           <div className="text-center space-y-2">
-            <h1 className="text-3xl font-display font-bold">
-              Glow Up Time!
-            </h1>
+            <h1 className="text-3xl font-display font-bold">Glow Up Time!</h1>
           </div>
 
           {/* Nickname Input */}
           <div className="space-y-2">
-            <label htmlFor="nickname" className="text-md font-display font-medium">
+            <label
+              htmlFor="nickname"
+              className="text-md font-display font-medium"
+            >
               What do you want to be called?
             </label>
-            <p className="text-muted-foreground">This will be what people see when you join a party.</p>
+            <p className="text-muted-foreground">
+              This will be what people see when you join a party.
+            </p>
             <div className="relative">
               <WandSparkles className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
@@ -107,7 +122,7 @@ function AvatarContent() {
                 maxLength={20}
                 className={cn(
                   "pl-10 h-12 bg-background/10 border-border/50 pr-12",
-                  error && "border-destructive"
+                  error && "border-destructive",
                 )}
               />
               {(showNameLoader || showNameCheck) && (
@@ -121,15 +136,17 @@ function AvatarContent() {
                 </span>
               )}
             </div>
-            {error && (
-              <p className="text-sm text-destructive">{error}</p>
-            )}
+            {error && <p className="text-sm text-destructive">{error}</p>}
           </div>
 
           {/* Avatar Picker */}
           <div className="space-y-4">
-            <label className="text-md font-display font-medium">Select An Avatar</label>
-            <p className="text-muted-foreground">This is what people see when you join a party.</p>
+            <label className="text-md font-display font-medium">
+              Select An Avatar
+            </label>
+            <p className="text-muted-foreground">
+              This is what people see when you join a party.
+            </p>
             <AvatarPicker
               selectedAvatarId={selectedAvatarId}
               onSelect={setSelectedAvatarId}
@@ -141,9 +158,16 @@ function AvatarContent() {
             onClick={handleContinue}
             className="w-full"
             size="2xl"
-            disabled={!nickname.trim() || !selectedAvatarId}
+            disabled={!nickname.trim() || isSaving}
           >
-            Continue
+            {isSaving ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                Saving...
+              </>
+            ) : (
+              "Continue"
+            )}
           </Button>
         </div>
       </PageTransition>

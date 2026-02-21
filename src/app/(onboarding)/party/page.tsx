@@ -27,22 +27,24 @@ export default function JoinPage() {
   };
 
   // Redirect if not authenticated or profile incomplete
+  // Check both localStorage profile (UserProvider) and DB-sourced auth user as fallback
+  const hasCompleteProfile = profile?.nickname || user?.nickname;
+
   useEffect(() => {
     if (!user) {
       router.push("/login");
       return;
     }
-    if (!profile?.nickname || !profile?.avatarId) {
+    if (!hasCompleteProfile) {
       router.push("/avatar");
       return;
     }
-  }, [user, profile, router]);
+  }, [user, hasCompleteProfile, router]);
 
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>
       <PageTransition className="max-w-md mx-auto w-full">
         <div className="space-y-2">
-
           {/* Illustration */}
           <div className="flex justify-center">
             <ThemedImage
@@ -59,16 +61,13 @@ export default function JoinPage() {
               Check your email for your Applaudit invite!
             </h1>
             <p className="text-muted-foreground max-w-xs mx-auto mb-8">
-              We&apos;ll send you a link when a host adds you to their Applaudit party.
+              We&apos;ll send you a link when a host adds you to their Applaudit
+              party.
             </p>
           </div>
 
           {/* Pretend you were added — prototype advance */}
-          <Button
-            onClick={handlePretendAdded}
-            className="w-full"
-            size="2xl"
-          >
+          <Button onClick={handlePretendAdded} className="w-full" size="2xl">
             Pretend you were added
           </Button>
 

@@ -12,12 +12,17 @@ export default function LoginPage() {
   const router = useRouter();
   const { signInWithEmail } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (email: string) => {
     setIsLoading(true);
-    signInWithEmail(email);
-    // Small delay to show loading state
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    setError(null);
+    const result = await signInWithEmail(email);
+    if (result.error) {
+      setError(result.error);
+      setIsLoading(false);
+      return;
+    }
     router.push("/verify");
   };
 
@@ -40,7 +45,10 @@ export default function LoginPage() {
           </div>
 
           {/* Dark Card */}
-          <Card variant="dark" className="w-full rounded-2xl p-8 border-0 gap-0">
+          <Card
+            variant="dark"
+            className="w-full rounded-2xl p-8 border-0 gap-0"
+          >
             <h1 className="text-2xl font-bold mb-2">Get your sign-in link</h1>
             <p className="text-muted-foreground mb-6">
               Enter your email and we&apos;ll send you a secure login link. No
@@ -49,7 +57,9 @@ export default function LoginPage() {
 
             <EmailForm onSubmit={handleSubmit} isLoading={isLoading} />
 
-            {/* Prototype only: skip email and go to verify — remove before production */}
+            {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
+
+            {/* Dev only: skip email and go straight to simulate flow */}
             <button
               type="button"
               onClick={() => {
