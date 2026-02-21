@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
 import { ChevronLeft } from "lucide-react";
@@ -20,14 +20,8 @@ export default function EditBallotPage() {
   const { setCenterContent } = useNavCenter();
   const id = params.id as string;
 
-  const ballot = useMemo(
-    () => (typeof window !== "undefined" ? getBallotById(id) : undefined),
-    [id]
-  );
-  const choices = useMemo(
-    () => (typeof window !== "undefined" && ballot ? getChoicesForBallot(ballot.id) : []),
-    [ballot?.id]
-  );
+  const ballot = getBallotById(id);
+  const choices = ballot ? getChoicesForBallot(ballot.id) : [];
 
   useEffect(() => {
     if (isLoading) return;

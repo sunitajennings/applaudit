@@ -33,16 +33,15 @@ function Divider() {
 
 export function Countdown() {
   const eventDate = getEventStartDate();
-  const [now, setNow] = useState(() => (typeof window !== "undefined" ? Date.now() : 0));
-  const [mounted, setMounted] = useState(false);
+  const [now, setNow] = useState<number | null>(null);
 
   useEffect(() => {
-    setMounted(true);
+    setNow(Date.now());
     const t = setInterval(() => setNow(Date.now()), 1000);
     return () => clearInterval(t);
   }, []);
 
-  if (!mounted || !eventDate) {
+  if (now === null || !eventDate) {
     return (
       <div className="space-y-2">
         <p className="text-center text-gold text-sm font-medium">

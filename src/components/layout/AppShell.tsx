@@ -2,8 +2,6 @@
 
 import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { Logo } from "@/components/shared/Logo";
-import { Avatar } from "@/components/shared/Avatar";
 
 interface AppShellProps {
   children: ReactNode;
@@ -20,12 +18,7 @@ interface AppShellProps {
 export function AppShell({
   children,
   variant = "dark",
-  showLogo = true,
-  showAvatar = false,
-  avatarInitials = "??",
-  avatarImageUrl,
   className,
-  headerClassName,
   mainClassName,
 }: AppShellProps) {
   return (
@@ -33,9 +26,9 @@ export function AppShell({
       className={cn(
         "min-h-screen flex flex-col",
         variant === "light" ? "bg-background" : "bg-background",
-        className
+        className,
       )}
-    >      
+    >
       <main className={cn("flex-1 px-4 pb-8", mainClassName)}>{children}</main>
     </div>
   );
