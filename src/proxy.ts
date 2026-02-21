@@ -11,14 +11,15 @@ export async function proxy(request: NextRequest) {
     return response;
   }
 
-  // Unauthenticated users can't access protected routes
-  if (!user) {
-    return NextResponse.redirect(new URL("/login", request.url));
+  if (pathname === "/login") {
+    // Authenticated users don't need to be on /login
+    if (user) return NextResponse.redirect(new URL("/ballot", request.url));
+    return response;
   }
 
-  // Authenticated users don't need to be on /login
-  if (pathname === "/login") {
-    return NextResponse.redirect(new URL("/ballot", request.url));
+  // All other matched routes are protected
+  if (!user) {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   return response;
