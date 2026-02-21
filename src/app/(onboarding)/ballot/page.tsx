@@ -15,6 +15,8 @@ export default function BallotPage() {
   const router = useRouter();
   const { user, profile, isLoading } = useSession();
 
+  // because hasCompleteProfile won't change once it's set up,
+  // this won't trigger except when isLoading changes.
   useEffect(() => {
     if (isLoading) return;
     if (!profile?.nickname) {

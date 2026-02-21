@@ -26,6 +26,8 @@ export default function JoinPage() {
 
   const hasCompleteProfile = profile?.nickname;
 
+  // because hasCompleteProfile won't change once it's set up,
+  // this won't trigger except when isLoading changes.
   useEffect(() => {
     if (isLoading) return;
     if (!hasCompleteProfile) {
