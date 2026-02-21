@@ -30,13 +30,6 @@ function AvatarContent() {
   const [showNameLoader, setShowNameLoader] = useState(false);
   const [showNameCheck, setShowNameCheck] = useState(false);
 
-  // Redirect if not authenticated (skip when ?preview is used to view the page directly)
-  useEffect(() => {
-    if (!isPreview && !user) {
-      router.push("/login");
-    }
-  }, [user, router, isPreview]);
-
   const handleContinue = async () => {
     if (!nickname.trim()) {
       setError("Please enter a nickname");

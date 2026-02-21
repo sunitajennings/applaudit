@@ -32,15 +32,10 @@ export default function EditBallotPage() {
   );
 
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
     if (!profile?.nickname || !profile?.avatarId) {
       router.push("/avatar");
-      return;
     }
-  }, [user, profile, router]);
+  }, [profile, router]);
 
   useEffect(() => {
     if (!user) return;
@@ -82,7 +77,7 @@ export default function EditBallotPage() {
     }
   };
 
-  if (!user || !profile?.nickname || !profile?.avatarId) {
+  if (!profile?.nickname || !profile?.avatarId) {
     return null;
   }
   if (!ballot || ballot.userId !== user.id || isEventStarted()) {

@@ -22,19 +22,14 @@ export default function NewBallotPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
     if (!profile?.nickname || !profile?.avatarId) {
       router.push("/avatar");
       return;
     }
     if (profile.groupId == null) {
       router.push("/party");
-      return;
     }
-  }, [user, profile, router]);
+  }, [profile, router]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +44,7 @@ export default function NewBallotPage() {
     router.push(`/ballot/${ballot.id}/edit`);
   };
 
-  if (!user || !profile?.nickname || !profile?.avatarId || profile.groupId == null) {
+  if (!profile?.nickname || !profile?.avatarId || profile.groupId == null) {
     return null;
   }
 

@@ -18,7 +18,7 @@ function handleJoinHostBeta() {
 
 export default function JoinPage() {
   const router = useRouter();
-  const { user, isLoading } = useAuth();
+  const { user } = useAuth();
   const { profile, updateProfile } = useUser();
 
   const handlePretendAdded = () => {
@@ -26,23 +26,14 @@ export default function JoinPage() {
     router.push("/ballot");
   };
 
-  // Redirect if not authenticated or profile incomplete
   // Check both localStorage profile (UserProvider) and DB-sourced auth user as fallback
   const hasCompleteProfile = profile?.nickname || user?.nickname;
 
   useEffect(() => {
-    if (isLoading) return;
-    if (!user) {
-      router.push("/login");
-      return;
-    }
     if (!hasCompleteProfile) {
       router.push("/avatar");
-      return;
     }
-  }, [user, isLoading, hasCompleteProfile, router]);
-
-  if (isLoading) return null;
+  }, [hasCompleteProfile, router]);
 
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>
