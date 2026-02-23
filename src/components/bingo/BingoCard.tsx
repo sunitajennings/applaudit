@@ -4,8 +4,6 @@ import { useRef, useCallback } from "react";
 import {
   GRID_ROWS,
   GRID_COLS,
-  FREE_ROW,
-  FREE_COL,
   BINGO_FREE_LABEL,
   type BingoGrid,
   type BingoClues,
@@ -91,7 +89,7 @@ function BingoCell({
       className={cn(
         "relative flex flex-col items-center justify-center min-h-[2.75rem] sm:min-h-[4rem] md:min-h-[5rem] p-0.5 sm:p-1.5 rounded-md sm:rounded-lg border border-border sm:border-2 bg-card text-card-foreground transition-colors",
         isFree && "bg-muted/50",
-        marked && "bg-primary/10 border-primary/50"
+        marked && "bg-primary/10 border-primary/50",
       )}
     >
       <button
@@ -102,7 +100,7 @@ function BingoCell({
         onPointerLeave={handlePointerCancel}
         className={cn(
           "w-full h-full min-h-0 flex flex-col items-center justify-center rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 sm:ring-offset-2 cursor-pointer",
-          "hover:bg-muted/50"
+          "hover:bg-muted/50",
         )}
         title={clue ?? undefined}
       >
@@ -111,7 +109,7 @@ function BingoCell({
             "w-full min-w-0 overflow-hidden text-center p-2 justify-center flex-1 flex items-center",
             isFree
               ? "font-display font-bold text-xs sm:text-base text-center"
-              : "text-xs leading-tight text-center sm:line-clamp-3 px-0.5"
+              : "text-xs leading-tight text-center sm:line-clamp-3 px-0.5",
           )}
         >
           {isFree ? BINGO_FREE_LABEL : (clue ?? String(value))}
@@ -173,12 +171,12 @@ export function BingoCard({
               row={r}
               col={c}
               value={value}
-              clue={value > 0 ? clues[value - 1] ?? null : null}
+              clue={value > 0 ? (clues[value - 1] ?? null) : null}
               marked={marked[r]?.[c] ?? false}
               onExpandClue={onExpandPhrase}
               onMarkCell={onMarkCell}
             />
-          ))
+          )),
         )}
       </div>
     </div>

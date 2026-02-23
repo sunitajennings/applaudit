@@ -5,14 +5,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 import { PageTransition } from "@/components/layout/PageTransition";
-import { useAuth } from "@/lib/store/auth";
+import { useSession } from "@/lib/store/session";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { Card } from "@/components/ui/card";
 
 function CallbackContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { completeSignIn } = useAuth();
+  const { completeSignIn, isProfileLoaded, isProfileComplete } = useSession();
 
   // Skip redirect when ?stay or ?noRedirect is in the URL (for working on this page)
   const skipRedirect = searchParams.has("stay") || searchParams.has("noRedirect");
@@ -20,16 +20,22 @@ function CallbackContent() {
   useEffect(() => {
     // Complete the sign-in process
     completeSignIn();
+  }, [completeSignIn]);
 
-    if (skipRedirect) return;
+  useEffect(() => {
+    if (skipRedirect || !isProfileLoaded) return;
 
-    // Redirect after 2 seconds
+    // Redirect after a short delay once profile is loaded
     const timer = setTimeout(() => {
-      router.push("/avatar");
+      if (isProfileComplete) {
+        router.push("/party");
+      } else {
+        router.push("/avatar");
+      }
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [completeSignIn, router, skipRedirect]);
+  }, [isProfileLoaded, isProfileComplete, router, skipRedirect]);
 
   return (
     <div className="min-h-screen bg-background flex flex-col">

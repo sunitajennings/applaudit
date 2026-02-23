@@ -1,0 +1,265 @@
+{
+  "name": "98th Academy Awards",
+  "year": 2026,
+  "state": "upcoming",
+  "categories": [
+    {
+      "name": "Best Picture",
+      "display_order": 1,
+      "nominees": [
+        { "name": "The Brutalist", "work_title": "The Brutalist" },
+        { "name": "A Complete Unknown", "work_title": "A Complete Unknown" },
+        { "name": "Conclave", "work_title": "Conclave" },
+        { "name": "Dune: Part Two", "work_title": "Dune: Part Two" },
+        { "name": "Emilia Pérez", "work_title": "Emilia Pérez" },
+        { "name": "I'm Still Here", "work_title": "I'm Still Here" },
+        { "name": "Nickel Boys", "work_title": "Nickel Boys" },
+        { "name": "The Substance", "work_title": "The Substance" },
+        { "name": "Anora", "work_title": "Anora" },
+        { "name": "Wicked", "work_title": "Wicked" }
+      ]
+    },
+    {
+      "name": "Best Director",
+      "display_order": 2,
+      "nominees": [
+        { "name": "Sean Baker", "work_title": "Anora" },
+        { "name": "Brady Corbet", "work_title": "The Brutalist" },
+        { "name": "James Mangold", "work_title": "A Complete Unknown" },
+        { "name": "Jacques Audiard", "work_title": "Emilia Pérez" },
+        { "name": "Coralie Fargeat", "work_title": "The Substance" }
+      ]
+    },
+    {
+      "name": "Best Actress",
+      "display_order": 3,
+      "nominees": [
+        { "name": "Cynthia Erivo", "work_title": "Wicked" },
+        { "name": "Mikey Madison", "work_title": "Anora" },
+        { "name": "Demi Moore", "work_title": "The Substance" },
+        { "name": "Fernanda Torres", "work_title": "I'm Still Here" },
+        { "name": "Karla Sofía Gascón", "work_title": "Emilia Pérez" }
+      ]
+    },
+    {
+      "name": "Best Actor",
+      "display_order": 4,
+      "nominees": [
+        { "name": "Adrien Brody", "work_title": "The Brutalist" },
+        { "name": "Timothée Chalamet", "work_title": "A Complete Unknown" },
+        { "name": "Colman Domingo", "work_title": "Sing Sing" },
+        { "name": "Ralph Fiennes", "work_title": "Conclave" },
+        { "name": "Sebastian Stan", "work_title": "The Apprentice" }
+      ]
+    },
+    {
+      "name": "Best Supporting Actress",
+      "display_order": 5,
+      "nominees": [
+        { "name": "Monica Barbaro", "work_title": "A Complete Unknown" },
+        { "name": "Ariana Grande", "work_title": "Wicked" },
+        { "name": "Felicity Jones", "work_title": "The Brutalist" },
+        { "name": "Isabella Rossellini", "work_title": "Conclave" },
+        { "name": "Zoe Saldaña", "work_title": "Emilia Pérez" }
+      ]
+    },
+    {
+      "name": "Best Supporting Actor",
+      "display_order": 6,
+      "nominees": [
+        { "name": "Yura Borisov", "work_title": "Anora" },
+        { "name": "Kieran Culkin", "work_title": "A Real Pain" },
+        { "name": "Edward Norton", "work_title": "A Complete Unknown" },
+        { "name": "Guy Pearce", "work_title": "The Brutalist" },
+        { "name": "Jeremy Strong", "work_title": "The Apprentice" }
+      ]
+    },
+    {
+      "name": "Best Original Screenplay",
+      "display_order": 7,
+      "nominees": [
+        { "name": "Sean Baker", "work_title": "Anora" },
+        { "name": "Brady Corbet & Mona Fastvold", "work_title": "The Brutalist" },
+        { "name": "Jesse Eisenberg", "work_title": "A Real Pain" },
+        { "name": "Justin Kuritzkes", "work_title": "Challengers" },
+        { "name": "Coralie Fargeat", "work_title": "The Substance" }
+      ]
+    },
+    {
+      "name": "Best Adapted Screenplay",
+      "display_order": 8,
+      "nominees": [
+        { "name": "James Mangold & Jay Cocks", "work_title": "A Complete Unknown" },
+        { "name": "Peter Straughan", "work_title": "Conclave" },
+        { "name": "Jacques Audiard", "work_title": "Emilia Pérez" },
+        { "name": "RaMell Ross & Joslyn Barnes", "work_title": "Nickel Boys" },
+        { "name": "Virgil Williams & Malcolm Washington", "work_title": "Sing Sing" }
+      ]
+    },
+    {
+      "name": "Best Animated Feature",
+      "display_order": 9,
+      "nominees": [
+        { "name": "Flow", "work_title": "Flow" },
+        { "name": "Inside Out 2", "work_title": "Inside Out 2" },
+        { "name": "Memoir of a Snail", "work_title": "Memoir of a Snail" },
+        { "name": "Wallace & Gromit: Vengeance Most Fowl", "work_title": "Wallace & Gromit: Vengeance Most Fowl" },
+        { "name": "The Wild Robot", "work_title": "The Wild Robot" }
+      ]
+    },
+    {
+      "name": "Best International Feature Film",
+      "display_order": 10,
+      "nominees": [
+        { "name": "I'm Still Here", "work_title": "I'm Still Here (Brazil)" },
+        { "name": "The Girl with the Needle", "work_title": "The Girl with the Needle (Denmark)" },
+        { "name": "Emilia Pérez", "work_title": "Emilia Pérez (France)" },
+        { "name": "The Seed of the Sacred Fig", "work_title": "The Seed of the Sacred Fig (Germany)" },
+        { "name": "Flow", "work_title": "Flow (Latvia)" }
+      ]
+    },
+    {
+      "name": "Best Original Score",
+      "display_order": 11,
+      "nominees": [
+        { "name": "Daniel Blumberg", "work_title": "The Brutalist" },
+        { "name": "Volker Bertelmann", "work_title": "Conclave" },
+        { "name": "Clément Ducol & Camille", "work_title": "Emilia Pérez" },
+        { "name": "Trent Reznor & Atticus Ross", "work_title": "Challengers" },
+        { "name": "Kris Bowers", "work_title": "The Wild Robot" }
+      ]
+    },
+    {
+      "name": "Best Original Song",
+      "display_order": 12,
+      "nominees": [
+        { "name": "\"El Mal\"", "work_title": "Emilia Pérez" },
+        { "name": "\"The Journey\"", "work_title": "The Six Triple Eight" },
+        { "name": "\"Like a Bird\"", "work_title": "Sing Sing" },
+        { "name": "\"Mi Camino\"", "work_title": "Emilia Pérez" },
+        { "name": "\"Never Too Late\"", "work_title": "Elton John: Never Too Late" }
+      ]
+    },
+    {
+      "name": "Best Cinematography",
+      "display_order": 13,
+      "nominees": [
+        { "name": "Lol Crawley", "work_title": "The Brutalist" },
+        { "name": "Stéphane Fontaine", "work_title": "Conclave" },
+        { "name": "Greig Fraser", "work_title": "Dune: Part Two" },
+        { "name": "Paul Guilhaume", "work_title": "Emilia Pérez" },
+        { "name": "Jarin Blaschke", "work_title": "Nosferatu" }
+      ]
+    },
+    {
+      "name": "Best Film Editing",
+      "display_order": 14,
+      "nominees": [
+        { "name": "Sean Baker", "work_title": "Anora" },
+        { "name": "David Jancso", "work_title": "The Brutalist" },
+        { "name": "Juliette Welfling", "work_title": "Emilia Pérez" },
+        { "name": "Dávid Jancsó", "work_title": "Conclave" },
+        { "name": "Valerie Weiss", "work_title": "The Substance" }
+      ]
+    },
+    {
+      "name": "Best Costume Design",
+      "display_order": 15,
+      "nominees": [
+        { "name": "Massimo Cantini Parrini", "work_title": "Conclave" },
+        { "name": "Linda Hemming", "work_title": "Nosferatu" },
+        { "name": "Arianne Phillips", "work_title": "A Complete Unknown" },
+        { "name": "Paul Tazewell", "work_title": "Wicked" },
+        { "name": "Janty Yates", "work_title": "Gladiator II" }
+      ]
+    },
+    {
+      "name": "Best Production Design",
+      "display_order": 16,
+      "nominees": [
+        { "name": "Judy Becker & Patricia Cuccia", "work_title": "The Brutalist" },
+        { "name": "Suzie Davies & Cathy Featherstone", "work_title": "Conclave" },
+        { "name": "Patrice Vermette & Shane Vieau", "work_title": "Dune: Part Two" },
+        { "name": "Craig Lathrop", "work_title": "Nosferatu" },
+        { "name": "Nathan Crowley & Lee Sandales", "work_title": "Wicked" }
+      ]
+    },
+    {
+      "name": "Best Makeup and Hairstyling",
+      "display_order": 17,
+      "nominees": [
+        { "name": "A Different Man", "work_title": "A Different Man" },
+        { "name": "Emilia Pérez", "work_title": "Emilia Pérez" },
+        { "name": "Nosferatu", "work_title": "Nosferatu" },
+        { "name": "The Substance", "work_title": "The Substance" },
+        { "name": "Wicked", "work_title": "Wicked" }
+      ]
+    },
+    {
+      "name": "Best Sound",
+      "display_order": 18,
+      "nominees": [
+        { "name": "A Complete Unknown", "work_title": "A Complete Unknown" },
+        { "name": "Dune: Part Two", "work_title": "Dune: Part Two" },
+        { "name": "Emilia Pérez", "work_title": "Emilia Pérez" },
+        { "name": "The Wild Robot", "work_title": "The Wild Robot" },
+        { "name": "Wicked", "work_title": "Wicked" }
+      ]
+    },
+    {
+      "name": "Best Visual Effects",
+      "display_order": 19,
+      "nominees": [
+        { "name": "Alien: Romulus", "work_title": "Alien: Romulus" },
+        { "name": "Better Man", "work_title": "Better Man" },
+        { "name": "Dune: Part Two", "work_title": "Dune: Part Two" },
+        { "name": "Kingdom of the Planet of the Apes", "work_title": "Kingdom of the Planet of the Apes" },
+        { "name": "Wicked", "work_title": "Wicked" }
+      ]
+    },
+    {
+      "name": "Best Documentary Feature",
+      "display_order": 20,
+      "nominees": [
+        { "name": "Black Box Diaries", "work_title": "Black Box Diaries" },
+        { "name": "No Other Land", "work_title": "No Other Land" },
+        { "name": "Porcelain War", "work_title": "Porcelain War" },
+        { "name": "Soundtrack to a Coup d'Etat", "work_title": "Soundtrack to a Coup d'Etat" },
+        { "name": "Sugarcane", "work_title": "Sugarcane" }
+      ]
+    },
+    {
+      "name": "Best Documentary Short Film",
+      "display_order": 21,
+      "nominees": [
+        { "name": "Death by Numbers", "work_title": "Death by Numbers" },
+        { "name": "I Am Ready, Warden", "work_title": "I Am Ready, Warden" },
+        { "name": "Incident", "work_title": "Incident" },
+        { "name": "Instruments of a Beating Heart", "work_title": "Instruments of a Beating Heart" },
+        { "name": "The Only Girl in the Orchestra", "work_title": "The Only Girl in the Orchestra" }
+      ]
+    },
+    {
+      "name": "Best Live Action Short Film",
+      "display_order": 22,
+      "nominees": [
+        { "name": "A Lien", "work_title": "A Lien" },
+        { "name": "Anuja", "work_title": "Anuja" },
+        { "name": "I'm Not a Robot", "work_title": "I'm Not a Robot" },
+        { "name": "The Last Ranger", "work_title": "The Last Ranger" },
+        { "name": "The Man Who Could Not Remain Silent", "work_title": "The Man Who Could Not Remain Silent" }
+      ]
+    },
+    {
+      "name": "Best Animated Short Film",
+      "display_order": 23,
+      "nominees": [
+        { "name": "Beautiful Men", "work_title": "Beautiful Men" },
+        { "name": "In the Shadow of the Cypress", "work_title": "In the Shadow of the Cypress" },
+        { "name": "Magic Candies", "work_title": "Magic Candies" },
+        { "name": "Wander to Wonder", "work_title": "Wander to Wonder" },
+        { "name": "Yuck!", "work_title": "Yuck!" }
+      ]
+    }
+  ]
+}

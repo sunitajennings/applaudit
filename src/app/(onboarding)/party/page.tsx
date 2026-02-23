@@ -5,8 +5,7 @@ import { useRouter } from "next/navigation";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/store/auth";
-import { useUser } from "@/lib/store/user";
+import { useSession } from "@/lib/store/session";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 
 const DEFAULT_GROUP_ID = "default";
@@ -18,31 +17,28 @@ function handleJoinHostBeta() {
 
 export default function JoinPage() {
   const router = useRouter();
-  const { user } = useAuth();
-  const { profile, updateProfile } = useUser();
+  const { profile, updateProfile, isLoading } = useSession();
 
   const handlePretendAdded = () => {
     updateProfile({ groupId: DEFAULT_GROUP_ID });
     router.push("/ballot");
   };
 
-  // Redirect if not authenticated or profile incomplete
+  const hasCompleteProfile = profile?.nickname;
+
+  // because hasCompleteProfile won't change once it's set up,
+  // this won't trigger except when isLoading changes.
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-    if (!profile?.nickname || !profile?.avatarId) {
+    if (isLoading) return;
+    if (!hasCompleteProfile) {
       router.push("/avatar");
-      return;
     }
-  }, [user, profile, router]);
+  }, [isLoading, hasCompleteProfile, router]);
 
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>
       <PageTransition className="max-w-md mx-auto w-full">
         <div className="space-y-2">
-
           {/* Illustration */}
           <div className="flex justify-center">
             <ThemedImage
@@ -59,16 +55,13 @@ export default function JoinPage() {
               Check your email for your Applaudit invite!
             </h1>
             <p className="text-muted-foreground max-w-xs mx-auto mb-8">
-              We&apos;ll send you a link when a host adds you to their Applaudit party.
+              We&apos;ll send you a link when a host adds you to their Applaudit
+              party.
             </p>
           </div>
 
           {/* Pretend you were added — prototype advance */}
-          <Button
-            onClick={handlePretendAdded}
-            className="w-full"
-            size="2xl"
-          >
+          <Button onClick={handlePretendAdded} className="w-full" size="2xl">
             Pretend you were added
           </Button>
 

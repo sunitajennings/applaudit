@@ -6,27 +6,23 @@ import { useRouter } from "next/navigation";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/lib/store/auth";
-import { useUser } from "@/lib/store/user";
+import { useSession } from "@/lib/store/session";
 import { Countdown } from "@/components/stage/Countdown";
 import { IllustrationPlaceholder } from "@/components/shared/IllustrationPlaceholder";
 import { BallotList } from "@/components/ballot/BallotList";
 
 export default function BallotPage() {
   const router = useRouter();
-  const { user } = useAuth();
-  const { profile } = useUser();
+  const { user, profile, isLoading } = useSession();
 
+  // because hasCompleteProfile won't change once it's set up,
+  // this won't trigger except when isLoading changes.
   useEffect(() => {
-    if (!user) {
-      router.push("/login");
-      return;
-    }
-    if (!profile?.nickname || !profile?.avatarId) {
+    if (isLoading) return;
+    if (!profile?.nickname) {
       router.push("/avatar");
-      return;
     }
-  }, [user, profile, router]);
+  }, [isLoading, profile, router]);
 
   return (
     <AppShell variant="dark" showLogo={true} showAvatar={false}>
@@ -84,10 +80,7 @@ export default function BallotPage() {
           </Link>
 
           {user && (
-            <BallotList
-              userId={user.id}
-              groupId={profile?.groupId ?? null}
-            />
+            <BallotList userId={user.id} groupId={profile?.groupId ?? null} />
           )}
         </div>
       </PageTransition>
