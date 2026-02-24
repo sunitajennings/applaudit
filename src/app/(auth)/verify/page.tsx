@@ -79,10 +79,6 @@ export default function VerifyPage() {
                 Open email app
               </Button>
 
-              {/* Prototype: Simulate magic link click */}
-              <Button className="w-full h-12" onClick={handleSimulateMagicLink}>
-                Simulate magic link click
-              </Button>
             </div>
 
             <button

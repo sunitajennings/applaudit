@@ -58,18 +58,7 @@ export default function LoginPage() {
             <EmailForm onSubmit={handleSubmit} isLoading={isLoading} />
 
             {error && <p className="mt-3 text-sm text-destructive">{error}</p>}
-
-            {/* Dev only: skip email and go straight to simulate flow */}
-            <button
-              type="button"
-              onClick={() => {
-                signInWithEmail("prototype@example.com");
-                router.push("/verify");
-              }}
-              className="mt-4 w-full text-sm text-muted-foreground hover:text-foreground transition-colors underline"
-            >
-              Pretend I have one
-            </button>
+            
           </Card>
         </main>
       </PageTransition>
