@@ -94,7 +94,7 @@ export function GlobalNav({ className }: GlobalNavProps) {
               />
             </div>
           ) : !isLoading ? (
-            <Button asChild variant="link" size="icon-lg">
+            <Button asChild variant="outline" size="sm">
               <Link href="/login">Login</Link>
             </Button>
           ) : (
