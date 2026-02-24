@@ -8,7 +8,6 @@ import { AppShell } from "@/components/layout/AppShell";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/store/session";
 import { Countdown } from "@/components/stage/Countdown";
-import { IllustrationPlaceholder } from "@/components/shared/IllustrationPlaceholder";
 import { BallotList } from "@/components/ballot/BallotList";
 
 export default function BallotPage() {
@@ -32,15 +31,11 @@ export default function BallotPage() {
 
           <Link
             href="/ballot/red-carpet"
-            className="relative flex items-stretch gap-0 rounded-2xl overflow-hidden border border-primary shadow-md hover:shadow-lg transition-shadow focus-visible:outline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-            style={{
-              background:
-                "linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 88%, white) 50%, var(--primary) 100%)",
-            }}
+            className="relative flex items-stretch gap-0 rounded-2xl overflow-visible border border-primary shadow-md hover:shadow-lg transition-shadow focus-visible:outline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
-            {/* Animated shine overlay */}
+            {/* Shine overlay across whole card */}
             <span
-              className="pointer-events-none absolute inset-0 z-0"
+              className="pointer-events-none absolute inset-0 z-0 rounded-2xl overflow-hidden"
               aria-hidden
             >
               <span
@@ -52,30 +47,45 @@ export default function BallotPage() {
                 }}
               />
             </span>
-            <div className="relative z-10 flex-1 min-w-0 flex flex-col justify-center gap-3 p-5">
-              <div>
-                <p className="font-display font-bold text-primary-foreground text-lg leading-tight">
-                  Red Carpet
-                </p>
-                <p className="font-display font-bold text-primary-foreground/90 text-lg leading-tight">
-                  Bingo!
-                </p>
+            <div
+              className="relative z-10 flex-1 min-w-0 flex flex-col justify-center gap-3 p-5 rounded-l-2xl overflow-hidden"
+              style={{
+                background:
+                  "linear-gradient(135deg, var(--primary) 0%, color-mix(in srgb, var(--primary) 88%, white) 50%, var(--primary) 100%)",
+              }}
+            >
+              <div className="relative flex flex-col justify-center gap-3">
+                <div>
+                  <p className="font-display font-bold text-primary-foreground text-lg leading-tight">
+                    Red Carpet
+                  </p>
+                  <p className="font-display font-bold text-primary-foreground/90 text-2xl leading-tight">
+                    Bingo!
+                  </p>
+                </div>
+                <Button
+                  size="lg"
+                  className="rounded-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 w-fit font-semibold shadow-sm"
+                  asChild
+                >
+                  <span>Play</span>
+                </Button>
               </div>
-              <Button
-                size="sm"
-                className="rounded-full bg-primary-foreground text-primary hover:bg-primary-foreground/90 w-fit font-semibold shadow-sm"
-                asChild
-              >
-                <span>Play</span>
-              </Button>
             </div>
-            <div className="relative z-10 flex-shrink-0 w-28 self-stretch flex items-center justify-center bg-primary-foreground/10 border-l border-primary-foreground/10 p-2">
-              <IllustrationPlaceholder
-                width="100%"
-                height="100%"
-                label="Image"
-                className="min-h-20 rounded-xl border-2 border-dashed border-primary-foreground/25 bg-primary-foreground/5 text-primary-foreground/80"
-              />
+            <div
+              className="relative bg-primary z-10 flex-shrink-0 w-28 self-stretch overflow-visible rounded-r-2xl"
+                  
+            >
+              <div className="absolute top-[-28px] right-0 bottom-0 left-0">
+                <div className="absolute right-0 top-0 h-full w-auto aspect-square min-w-full relative">
+                  <img
+                    src="/images/illustrations/bingochips.svg"
+                    alt=""
+                    className="absolute inset-0 h-full w-full object-cover object-top object-right"
+                    aria-hidden
+                  />
+                </div>
+              </div>
             </div>
           </Link>
 
