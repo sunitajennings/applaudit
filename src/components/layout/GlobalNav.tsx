@@ -41,7 +41,7 @@ export function GlobalNav({ className }: GlobalNavProps) {
   return (
     <nav
       className={cn(
-        "w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "max-w-4xl w-full mx-auto bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
         className,
       )}
     >
@@ -94,7 +94,7 @@ export function GlobalNav({ className }: GlobalNavProps) {
               />
             </div>
           ) : !isLoading ? (
-            <Button asChild variant="link" size="icon-lg">
+            <Button asChild variant="outline" size="sm">
               <Link href="/login">Login</Link>
             </Button>
           ) : (
