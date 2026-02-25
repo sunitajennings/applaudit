@@ -8,6 +8,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { flushSync } from "react-dom";
 import { createClient } from "@/lib/supabase/client";
 import { fetchOrCreateProfile } from "@/lib/queries/profiles";
 
@@ -43,7 +44,7 @@ type SessionContextType = {
   signInWithEmail: (email: string) => Promise<{ error: string | null }>;
   resendOtp: (email: string) => Promise<{ error: string | null }>;
   completeSignIn: () => void;
-  signOut: () => void;
+  signOut: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
   updateProfile: (updates: Partial<UserProfile>) => void;
   getInitials: (nickname: string) => string;
@@ -158,27 +159,19 @@ export function SessionProvider({ children }: SessionProviderProps) {
       const stored = loadStoredState();
       setPendingEmail(stored.pendingEmail);
 
-      const { data } = await supabase.auth.getUser();
-      console.log("[session] init: supabase user =", data.user);
+      const { data } = await supabase.auth.getSession();
+      console.log("[session] init: supabase user =", data.session?.user);
 
-      if (data.user) {
+      if (data.session?.user) {
         await loadProfile(
-          data.user.id,
-          data.user.email!,
+          data.session.user.id,
+          data.session.user.email!,
           stored.avatarId,
           stored.groupId,
         );
       } else {
-        setUser(stored.user);
-        setProfile(
-          stored.user
-            ? {
-                nickname: stored.nickname,
-                avatarId: stored.avatarId,
-                groupId: stored.groupId,
-              }
-            : null,
-        );
+        setUser(null);
+        setProfile(null);
         setIsProfileLoaded(true);
       }
 
@@ -204,6 +197,14 @@ export function SessionProvider({ children }: SessionProviderProps) {
           stored.groupId,
         );
         setPendingEmail(null);
+      } else if (_event === "SIGNED_OUT") {
+        setUser(null);
+        setProfile(null);
+        setPendingEmail(null);
+        setIsProfileLoaded(false);
+        if (typeof window !== "undefined") {
+          localStorage.removeItem(STORAGE_KEY);
+        }
       }
     });
 
@@ -262,14 +263,16 @@ export function SessionProvider({ children }: SessionProviderProps) {
   }, [pendingEmail]);
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut();
-    setUser(null);
-    setProfile(null);
-    setPendingEmail(null);
-    setIsProfileLoaded(false);
+    flushSync(() => {
+      setUser(null);
+      setProfile(null);
+      setPendingEmail(null);
+      setIsProfileLoaded(false);
+    });
     if (typeof window !== "undefined") {
       localStorage.removeItem(STORAGE_KEY);
     }
+    await supabase.auth.signOut();
   }, [supabase]);
 
   const updateUser = useCallback((updates: Partial<User>) => {
