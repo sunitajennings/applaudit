@@ -28,7 +28,7 @@ function CallbackContent() {
     // Redirect after a short delay once profile is loaded
     const timer = setTimeout(() => {
       if (isProfileComplete) {
-        router.push("/party");
+        router.push("/ballot");
       } else {
         router.push("/avatar");
       }
