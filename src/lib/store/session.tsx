@@ -235,7 +235,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
       setPendingEmail(email);
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${window.location.origin}/callback` },
+        options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/callback` },
       });
       return { error: error?.message ?? null };
     },
@@ -246,7 +246,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
     async (email: string): Promise<{ error: string | null }> => {
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${window.location.origin}/callback` },
+        options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/callback` },
       });
       return { error: error?.message ?? null };
     },
