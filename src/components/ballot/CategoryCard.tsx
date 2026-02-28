@@ -8,7 +8,7 @@ interface CategoryCardProps {
   category: Category;
   nominees: Nominee[];
   selectedNomineeId: string | null;
-  onSelect: (nomineeId: string) => void;
+  onSelect: (nomineeId: string | null) => void;
 }
 
 export function CategoryCard({

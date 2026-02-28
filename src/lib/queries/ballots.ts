@@ -99,6 +99,19 @@ export async function getChoicesForBallot(
   return (data ?? []).map(toChoice);
 }
 
+export async function deleteChoiceForCategory(
+  supabase: SupabaseClient,
+  ballotId: string,
+  categoryId: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from("ballot_choices")
+    .delete()
+    .eq("ballot_id", ballotId)
+    .eq("category_id", categoryId);
+  if (error) throw error;
+}
+
 export async function upsertBallotChoices(
   supabase: SupabaseClient,
   ballotId: string,

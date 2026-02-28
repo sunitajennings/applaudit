@@ -15,7 +15,7 @@ interface RadioGroupProps {
   name: string;
   value: string | null;
   options: RadioOption[];
-  onChange: (value: string) => void;
+  onChange: (value: string | null) => void;
   className?: string;
 }
 
@@ -35,6 +35,12 @@ export function RadioGroup({
       {options.map((option) => (
         <label
           key={option.value}
+          onClick={(e) => {
+            if (value === option.value) {
+              e.preventDefault();
+              onChange(null);
+            }
+          }}
           className={cn(
             "relative flex items-center gap-3 rounded-3xl border px-4 py-3 cursor-pointer transition-colors",
             "border-border bg-background/10 hover:bg-background/20",
