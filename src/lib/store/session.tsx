@@ -43,6 +43,7 @@ type SessionContextType = {
   isProfileComplete: boolean;
   signInWithEmail: (email: string) => Promise<{ error: string | null }>;
   resendOtp: (email: string) => Promise<{ error: string | null }>;
+  verifyCode: (code: string) => Promise<{ error: string | null }>;
   completeSignIn: () => void;
   signOut: () => Promise<void>;
   updateUser: (updates: Partial<User>) => void;
@@ -253,6 +254,19 @@ export function SessionProvider({ children }: SessionProviderProps) {
     [supabase],
   );
 
+  const verifyCode = useCallback(
+    async (code: string): Promise<{ error: string | null }> => {
+      if (!pendingEmail) return { error: "No pending sign-in" };
+      const { error } = await supabase.auth.verifyOtp({
+        email: pendingEmail,
+        token: code,
+        type: "email",
+      });
+      return { error: error?.message ?? null };
+    },
+    [supabase, pendingEmail],
+  );
+
   const completeSignIn = useCallback(() => {
     if (pendingEmail) {
       const newUser: User = { id: generateUserId(), email: pendingEmail };
@@ -306,6 +320,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
     isProfileComplete,
     signInWithEmail,
     resendOtp,
+    verifyCode,
     completeSignIn,
     signOut,
     updateUser,
