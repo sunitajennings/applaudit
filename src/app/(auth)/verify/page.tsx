@@ -118,7 +118,7 @@ export default function VerifyPage() {
                   }}
                   onKeyDown={(e) => e.key === "Enter" && handleVerifyCode()}
                   placeholder="123456"
-                  className="flex-1 h-12 rounded-md border border-input bg-background px-3 text-center text-xl tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-ring"
+                  className="flex-1 h-12 rounded-md border border-border/50 bg-background/10 px-3 text-center text-xl tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-ring"
                 />
                 <Button
                   className="h-12 px-4"
