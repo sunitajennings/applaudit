@@ -1,11 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Plus, Tickets } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { getBallotsByUser } from "@/lib/ballot/storage";
+import { getBallotsByUser } from "@/lib/queries/ballots";
+import { createClient } from "@/lib/supabase/client";
 import { isEventStarted } from "@/data/oscar-2026";
+import type { Ballot } from "@/lib/ballot/types";
 
 interface BallotListProps {
   userId: string;
@@ -14,8 +17,14 @@ interface BallotListProps {
 
 export function BallotList({ userId, groupId }: BallotListProps) {
   const router = useRouter();
-  const ballots = getBallotsByUser(userId);
+  const supabase = createClient();
+  const [ballots, setBallots] = useState<Ballot[]>([]);
   const eventStarted = isEventStarted();
+
+  useEffect(() => {
+    getBallotsByUser(supabase, userId).then(setBallots).catch(console.error);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
 
   return (
     <div className="space-y-4">

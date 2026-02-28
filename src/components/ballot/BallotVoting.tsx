@@ -8,7 +8,8 @@ import { Card } from "@/components/ui/card";
 import { CategoryCard } from "@/components/ballot/CategoryCard";
 import { BallotSummary } from "@/components/ballot/BallotSummary";
 import { categories, getNomineesForCategory } from "@/data/oscar-2026";
-import { setBallotChoices } from "@/lib/ballot/storage";
+import { upsertBallotChoices } from "@/lib/queries/ballots";
+import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import type { Ballot, BallotChoice } from "@/lib/ballot/types";
 
@@ -19,6 +20,7 @@ interface BallotVotingProps {
 }
 
 export function BallotVoting({ ballot, initialChoices, onSave }: BallotVotingProps) {
+  const supabase = createClient();
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollToIndexRef = useRef<number | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -42,8 +44,9 @@ export function BallotVoting({ ballot, initialChoices, onSave }: BallotVotingPro
         categoryId,
         nomineeId,
       }));
-      setBallotChoices(ballot.id, list);
+      void upsertBallotChoices(supabase, ballot.id, list);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [ballot.id]
   );
 
