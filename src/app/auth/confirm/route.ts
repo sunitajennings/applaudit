@@ -6,7 +6,8 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const token_hash = searchParams.get("code");
   const type = searchParams.get("type");
-  const redirectTo = new URL("/login", request.url);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || new URL(request.url).origin;
+  const redirectTo = new URL("/login", siteUrl);
 
   if (type == null) redirectTo.searchParams.set("error", "unrecognized_type");
 
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
     const { error } = await supabase.auth.verifyOtp({ token_hash, type: type as EmailOtpType });
 
     if (!error) {
-      return NextResponse.redirect(new URL("/avatar", request.url));
+      return NextResponse.redirect(new URL("/avatar", siteUrl));
     }
 
     redirectTo.searchParams.set("error", "verification_failed");

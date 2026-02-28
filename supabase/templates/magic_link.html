@@ -18,7 +18,7 @@
               <p style="margin: 0 0 32px; font-size: 16px; line-height: 1.5; color: #52525b;">
                 Click the button below to sign in. This link will expire in 1 hour.
               </p>
-              <a href="{{ .ConfirmationURL }}"
+              <a href="{{ .SiteURL }}/auth/confirm?code={{ .TokenHash }}&type=magiclink"
                  style="display: inline-block; padding: 12px 32px; background-color: #18181b; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 500; border-radius: 6px;">
                 Sign in
               </a>
