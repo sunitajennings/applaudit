@@ -74,6 +74,18 @@ export async function getBallotById(
   return toBallot(data);
 }
 
+export async function updateBallotName(
+  supabase: SupabaseClient,
+  id: string,
+  name: string,
+): Promise<void> {
+  const { error } = await supabase
+    .from("ballots")
+    .update({ name })
+    .eq("id", id);
+  if (error) throw error;
+}
+
 export async function getChoicesForBallot(
   supabase: SupabaseClient,
   ballotId: string,
