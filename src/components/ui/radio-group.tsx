@@ -36,7 +36,7 @@ export function RadioGroup({
         <label
           key={option.value}
           className={cn(
-            "flex items-center gap-3 rounded-3xl border px-4 py-3 cursor-pointer transition-colors",
+            "relative flex items-center gap-3 rounded-3xl border px-4 py-3 cursor-pointer transition-colors",
             "border-border bg-background/10 hover:bg-background/20",
             value === option.value && "border-primary bg-primary/10"
           )}
