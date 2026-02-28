@@ -36,7 +36,7 @@ export default function EditBallotPage() {
   useEffect(() => {
     if (!user || isLoading) return;
     getBallotById(supabase, id)
-      .then((found) => {
+      .then(async (found) => {
         if (!found || found.userId !== user.id) {
           router.push("/ballot");
           return;
@@ -45,10 +45,9 @@ export default function EditBallotPage() {
           router.push("/ballot");
           return;
         }
+        const fetchedChoices = await getChoicesForBallot(supabase, found.id);
         setBallot(found);
-        getChoicesForBallot(supabase, found.id)
-          .then(setChoices)
-          .catch(console.error);
+        setChoices(fetchedChoices);
       })
       .catch(() => router.push("/ballot"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
