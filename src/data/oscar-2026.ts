@@ -169,12 +169,12 @@ const categoriesData: {
   {
     name: "Music (Original Song)",
     nominees: [
-      { name: "\u201cDear Me,\u201d", movie: "Diane Warren: Relentless" },
-      { name: "\u201cGolden,\u201d", movie: "KPop Demon Hunters" },
-      { name: "\u201cHighest 2 Lowest,\u201d", movie: "Highest 2 Lowest" },
-      { name: "\u201cI Lied To You,\u201d", movie: "Sinners" },
-      { name: "\u201cSweet Dreams of Joy,\u201d", movie: "Viva Verd\u00ed!" },
-      { name: "\u201cTrain Dreams,\u201d", movie: "Train Dreams" },
+      { name: '"Dear Me,"', movie: "Diane Warren: Relentless" },
+      { name: '"Golden,"', movie: "KPop Demon Hunters" },
+      { name: '"Highest 2 Lowest,"', movie: "Highest 2 Lowest" },
+      { name: '"I Lied To You,"', movie: "Sinners" },
+      { name: '"Sweet Dreams of Joy,"', movie: "Viva Verdi!" },
+      { name: '"Train Dreams,"', movie: "Train Dreams" },
     ],
   },
   {
