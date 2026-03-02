@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Card } from "@/components/ui/card";
 import { ThemedImage } from "@/components/shared/ThemedImage";
 import { useSession } from "@/lib/store/session";
-import { createBallot } from "@/lib/ballot/storage";
+import { createBallot } from "@/lib/queries/ballots";
+import { createClient } from "@/lib/supabase/client";
 import { AWARD_SHOW_ID } from "@/data/oscar-2026";
 
 export default function NewBallotPage() {
@@ -18,6 +19,8 @@ export default function NewBallotPage() {
   const { user, profile, isLoading } = useSession();
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const supabase = createClient();
 
   useEffect(() => {
     if (isLoading) return;
@@ -25,12 +28,12 @@ export default function NewBallotPage() {
       router.push("/avatar");
       return;
     }
-    if (profile.groupId == null) {
-      router.push("/party");
-    }
+    // if (profile.groupId == null) {
+    //   router.push("/party");
+    // }
   }, [isLoading, profile, router]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     const trimmed = name.trim();
@@ -38,17 +41,24 @@ export default function NewBallotPage() {
       setError("Please enter a ballot name.");
       return;
     }
-    if (!user || !profile?.groupId) return;
-    const ballot = createBallot(
-      user.id,
-      profile.groupId,
-      AWARD_SHOW_ID,
-      trimmed,
-    );
-    router.push(`/ballot/${ballot.id}/edit`);
+    if (!user) return;
+    setSubmitting(true);
+    try {
+      const ballot = await createBallot(
+        supabase,
+        user.id,
+        AWARD_SHOW_ID,
+        trimmed,
+      );
+      router.push(`/ballot/${ballot.id}/edit`);
+    } catch (err) {
+      console.error("Failed to create ballot:", err);
+      setError("Something went wrong. Please try again.");
+      setSubmitting(false);
+    }
   };
 
-  if (!profile?.nickname || !profile?.avatarId || profile.groupId == null) {
+  if (!profile?.nickname) {
     return null;
   }
 
@@ -105,7 +115,7 @@ export default function NewBallotPage() {
                 type="submit"
                 className="w-full h-12"
                 size="lg"
-                disabled={!name.trim()}
+                disabled={!name.trim() || submitting}
               >
                 Continue
               </Button>

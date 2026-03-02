@@ -8,7 +8,8 @@ import { Card } from "@/components/ui/card";
 import { CategoryCard } from "@/components/ballot/CategoryCard";
 import { BallotSummary } from "@/components/ballot/BallotSummary";
 import { categories, getNomineesForCategory } from "@/data/oscar-2026";
-import { setBallotChoices } from "@/lib/ballot/storage";
+import { deleteChoiceForCategory, upsertBallotChoices } from "@/lib/queries/ballots";
+import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import type { Ballot, BallotChoice } from "@/lib/ballot/types";
 
@@ -19,6 +20,7 @@ interface BallotVotingProps {
 }
 
 export function BallotVoting({ ballot, initialChoices, onSave }: BallotVotingProps) {
+  const supabase = createClient();
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollToIndexRef = useRef<number | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -42,18 +44,26 @@ export function BallotVoting({ ballot, initialChoices, onSave }: BallotVotingPro
         categoryId,
         nomineeId,
       }));
-      setBallotChoices(ballot.id, list);
+      void upsertBallotChoices(supabase, ballot.id, list);
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [ballot.id]
   );
 
   const handleSelect = useCallback(
-    (categoryId: string, nomineeId: string) => {
-      const next = { ...choices, [categoryId]: nomineeId };
+    (categoryId: string, nomineeId: string | null) => {
+      const next = { ...choices };
+      if (nomineeId === null) {
+        delete next[categoryId];
+        void deleteChoiceForCategory(supabase, ballot.id, categoryId);
+      } else {
+        next[categoryId] = nomineeId;
+      }
       setChoices(next);
-      persistChoices(next);
+      if (nomineeId !== null) persistChoices(next);
     },
-    [choices, persistChoices]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [choices, persistChoices, ballot.id]
   );
 
   const SLIDE_WIDTH_RATIO = 0.85;

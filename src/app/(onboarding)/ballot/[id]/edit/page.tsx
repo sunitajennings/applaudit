@@ -1,21 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useParams } from "next/navigation";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Pencil } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { AppShell } from "@/components/layout/AppShell";
 import { useSession } from "@/lib/store/session";
 import { useNavCenter } from "@/lib/store/nav-center";
-import {
-  getBallotById,
-  getChoicesForBallot,
-  updateBallot,
-} from "@/lib/ballot/storage";
+import { getBallotById, getChoicesForBallot, updateBallotName } from "@/lib/queries/ballots";
+import { createClient } from "@/lib/supabase/client";
 import { BallotVoting } from "@/components/ballot/BallotVoting";
 import { isEventStarted } from "@/data/oscar-2026";
+import type { Ballot, BallotChoice } from "@/lib/ballot/types";
 
 export default function EditBallotPage() {
   const router = useRouter();
@@ -23,9 +21,11 @@ export default function EditBallotPage() {
   const { user, profile, isLoading } = useSession();
   const { setCenterContent } = useNavCenter();
   const id = params.id as string;
+  const supabase = createClient();
 
-  const ballot = getBallotById(id);
-  const choices = ballot ? getChoicesForBallot(ballot.id) : [];
+  const [ballot, setBallot] = useState<Ballot | null>(null);
+  const [choices, setChoices] = useState<BallotChoice[]>([]);
+  const [isEditingName, setIsEditingName] = useState(false);
 
   useEffect(() => {
     if (isLoading) return;
@@ -35,21 +35,42 @@ export default function EditBallotPage() {
   }, [isLoading, profile, router]);
 
   useEffect(() => {
-    if (!user) return;
-    if (!ballot || ballot.userId !== user.id) {
-      router.push("/ballot");
-      return;
-    }
-    if (isEventStarted()) {
-      router.push("/ballot");
-      return;
-    }
-  }, [user, id, ballot, ballot?.userId, router]);
+    if (!user || isLoading) return;
+    getBallotById(supabase, id)
+      .then(async (found) => {
+        if (!found || found.userId !== user.id) {
+          router.push("/ballot");
+          return;
+        }
+        if (isEventStarted()) {
+          router.push("/ballot");
+          return;
+        }
+        const fetchedChoices = await getChoicesForBallot(supabase, found.id);
+        setBallot(found);
+        setChoices(fetchedChoices);
+      })
+      .catch(() => router.push("/ballot"));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, user, isLoading]);
 
   // Show back button + ballot title in nav center (between logo and avatar).
   // Depend on id and ballot name (primitives) to avoid infinite loop: ballot object is recreated each render.
   const ballotId = ballot?.id;
   const ballotName = ballot?.name;
+
+  const handleNameSave = useCallback(
+    (newName: string) => {
+      const trimmed = newName.trim();
+      setIsEditingName(false);
+      if (!ballotId || !trimmed || trimmed === ballotName) return;
+      setBallot((prev) => (prev ? { ...prev, name: trimmed } : prev));
+      void updateBallotName(supabase, ballotId, trimmed);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [ballotId, ballotName],
+  );
+
   useEffect(() => {
     if (!ballotId || ballotName == null) return;
     setCenterContent(
@@ -65,22 +86,40 @@ export default function EditBallotPage() {
             <ChevronLeft className="size-5" />
           </Link>
         </Button>
-        <h1 className="text-lg font-display font-bold capitalize min-w-0 truncate text-center">
-          {ballotName}
-        </h1>
+        {isEditingName ? (
+          <input
+            autoFocus
+            defaultValue={ballotName}
+            className="text-lg font-display font-bold min-w-0 flex-1 bg-transparent text-center outline-none border-b border-primary"
+            onBlur={(e) => handleNameSave(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") e.currentTarget.blur();
+              if (e.key === "Escape") setIsEditingName(false);
+            }}
+          />
+        ) : (
+          <button
+            type="button"
+            onClick={() => setIsEditingName(true)}
+            className="flex items-center gap-1.5 min-w-0 group"
+            aria-label="Edit ballot name"
+          >
+            <span className="text-lg font-display font-bold capitalize min-w-0 truncate">
+              {ballotName}
+            </span>
+            <Pencil className="size-3.5 shrink-0 text-muted-foreground opacity-60 group-hover:opacity-100 transition-opacity" />
+          </button>
+        )}
       </div>,
     );
     return () => setCenterContent(null);
-  }, [ballotId, ballotName, setCenterContent]);
+  }, [ballotId, ballotName, isEditingName, handleNameSave, setCenterContent]);
 
   const handleSave = () => {
-    if (ballot) {
-      updateBallot(ballot);
-      router.push("/ballot");
-    }
+    router.push("/ballot");
   };
 
-  if (!profile?.nickname || !profile?.avatarId) {
+  if (!profile?.nickname) {
     return null;
   }
   if (!user || !ballot || ballot.userId !== user.id || isEventStarted()) {
