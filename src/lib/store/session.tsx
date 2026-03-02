@@ -137,10 +137,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
           groupId: storedGroupId,
         });
       } catch (err) {
-        console.error(
-          "Failed to load profile, falling back to basic user:",
-          err,
-        );
+        console.log("Failed to load profile, falling back to basic user:", err);
         setUser({ id: userId, email });
         setProfile({
           nickname: "",
@@ -197,7 +194,6 @@ export function SessionProvider({ children }: SessionProviderProps) {
           stored.avatarId,
           stored.groupId,
         );
-        setPendingEmail(null);
       } else if (_event === "SIGNED_OUT") {
         setUser(null);
         setProfile(null);
@@ -236,7 +232,9 @@ export function SessionProvider({ children }: SessionProviderProps) {
       setPendingEmail(email);
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/callback` },
+        options: {
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/callback`,
+        },
       });
       return { error: error?.message ?? null };
     },
@@ -247,7 +245,9 @@ export function SessionProvider({ children }: SessionProviderProps) {
     async (email: string): Promise<{ error: string | null }> => {
       const { error } = await supabase.auth.signInWithOtp({
         email,
-        options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/callback` },
+        options: {
+          emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/callback`,
+        },
       });
       return { error: error?.message ?? null };
     },
@@ -277,12 +277,10 @@ export function SessionProvider({ children }: SessionProviderProps) {
   }, [pendingEmail]);
 
   const signOut = useCallback(async () => {
-    flushSync(() => {
-      setUser(null);
-      setProfile(null);
-      setPendingEmail(null);
-      setIsProfileLoaded(false);
-    });
+    setUser(null);
+    setProfile(null);
+    setPendingEmail(null);
+    setIsProfileLoaded(false);
     if (typeof window !== "undefined") {
       localStorage.removeItem(STORAGE_KEY);
     }
