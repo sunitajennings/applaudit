@@ -41,7 +41,7 @@ export default function NewBallotPage() {
       setError("Please enter a ballot name.");
       return;
     }
-    if (!user || !profile?.groupId) return;
+    if (!user) return;
     setSubmitting(true);
     try {
       const ballot = await createBallot(
