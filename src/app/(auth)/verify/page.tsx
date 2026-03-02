@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Mail, ExternalLink, RefreshCw } from "lucide-react";
+import { Mail, ExternalLink, RefreshCw, Loader2, ArrowRight } from "lucide-react";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Button } from "@/components/ui/button";
 import { useSession } from "@/lib/store/session";
@@ -11,13 +11,29 @@ import { Card } from "@/components/ui/card";
 
 export default function VerifyPage() {
   const router = useRouter();
-  const { pendingEmail, resendOtp } = useSession();
+  const { pendingEmail, resendOtp, verifyCode } = useSession();
   const [resendState, setResendState] = useState<
     "idle" | "sending" | "sent" | "error"
   >("idle");
+  const [code, setCode] = useState("");
+  const [codeError, setCodeError] = useState<string | null>(null);
+  const [codeState, setCodeState] = useState<"idle" | "verifying" | "error">("idle");
 
   const handleSimulateMagicLink = () => {
     router.push("/callback");
+  };
+
+  const handleVerifyCode = async () => {
+    if (code.length !== 6 || codeState === "verifying") return;
+    setCodeState("verifying");
+    setCodeError(null);
+    const { error } = await verifyCode(code);
+    if (error) {
+      setCodeError(error);
+      setCodeState("error");
+    } else {
+      router.push("/callback");
+    }
   };
 
   const handleResend = async () => {
@@ -79,6 +95,47 @@ export default function VerifyPage() {
                 Open email app
               </Button>
 
+              <div className="relative my-2">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t border-border" />
+                </div>
+                <div className="relative flex justify-center text-xs">
+                  <span className="bg-card px-2 text-muted-foreground">or enter code</span>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={6}
+                  value={code}
+                  onChange={(e) => {
+                    setCode(e.target.value.replace(/\D/g, ""));
+                    setCodeError(null);
+                    setCodeState("idle");
+                  }}
+                  onKeyDown={(e) => e.key === "Enter" && handleVerifyCode()}
+                  placeholder="123456"
+                  className="flex-1 h-12 rounded-md border border-border/50 bg-background/10 px-3 text-center text-xl tracking-widest font-mono focus:outline-none focus:ring-2 focus:ring-ring"
+                />
+                <Button
+                  className="h-12 px-4"
+                  onClick={handleVerifyCode}
+                  disabled={code.length !== 6 || codeState === "verifying"}
+                >
+                  {codeState === "verifying" ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <ArrowRight className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+
+              {codeError && (
+                <p className="text-sm text-destructive text-center">{codeError}</p>
+              )}
             </div>
 
             <button
