@@ -1,7 +1,7 @@
 "use client";
 
 import { useDraggable } from "@dnd-kit/core";
-import { Star } from "lucide-react";
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +30,7 @@ export function AwardStatueDraggable({
       {...listeners}
       {...attributes}
       className={cn(
-        "w-12 h-12 rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500 border border-amber-500/40 cursor-grab active:cursor-grabbing touch-none shrink-0",
+        "flex items-center justify-center cursor-grab active:cursor-grabbing touch-none shrink-0 min-w-12 min-h-12",
         isDragging && "opacity-90 z-10",
         className
       )}
@@ -57,7 +57,13 @@ export function AwardStatueDraggable({
             : undefined
       }
     >
-      <Star className="w-7 h-7" strokeWidth={1.5} fill="currentColor" />
+      <Image
+        src="/images/award.svg"
+        alt=""
+        width={28}
+        height={71}
+        className="h-12 w-auto object-contain pointer-events-none"
+      />
     </motion.div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useDroppable } from "@dnd-kit/core";
+import { Check } from "lucide-react";
 import type { Nominee } from "@/lib/ballot/types";
 import type { BallotSummary, UserSummary } from "@/lib/live/types";
 import { Avatar } from "@/components/shared/Avatar";
@@ -114,17 +115,28 @@ function NomineeCard({
     <div
       ref={setNodeRef}
       className={cn(
-        "flex items-center gap-3 rounded-3xl border px-4 py-3 transition-all duration-200",
-        "border-border bg-background/10 hover:bg-background/20",
-        isWinner && "border-amber-500 bg-amber-500/10 hover:bg-amber-500/15",
-        isSelectedBallotPick && !isWinner && "border-primary bg-primary/10",
+        "relative flex items-center gap-3 rounded-[14px] border px-4 py-3 transition-all duration-200",
+        "border-white/10 bg-[#3C3640] hover:bg-[#42323D]",
+        "text-white",
+        isWinner && !isSelectedBallotPick && "border-amber-500/60 bg-amber-500/10 hover:bg-amber-500/15",
+        isSelectedBallotPick && !isWinner && "border-[#C0617F] bg-[#4F3642] hover:bg-[#593A46]",
+        isSelectedBallotPick && isWinner && "border-[#C0617F] bg-[#4F3642] hover:bg-[#593A46]",
         enlarged && "scale-[1.02] ring-2 ring-amber-500/40"
       )}
     >
+      {isSelectedBallotPick && (
+        <span
+          className="absolute -top-1.5 right-2 flex items-center gap-1 rounded-full bg-[#EFD3DA] px-2 py-0.5 text-xs font-medium text-[#1a1a1a] shadow-sm"
+          aria-label="Your pick"
+        >
+          <Check className="size-3.5 shrink-0" strokeWidth={3} />
+          your pick
+        </span>
+      )}
       <div className="flex flex-col min-w-0 flex-1 text-base font-medium">
-        <span className="font-bold">{nominee.name}</span>
+        <span className="font-bold text-white">{nominee.name}</span>
         {nominee.movie != null && nominee.movie !== "" && (
-          <em className="font-normal text-muted-foreground text-sm truncate">
+          <em className="font-normal text-[#D3D3D3] text-sm truncate">
             {nominee.movie}
           </em>
         )}
