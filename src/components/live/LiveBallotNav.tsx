@@ -60,7 +60,7 @@ export function LiveBallotNav({
   if (ballots.length === 0) return null;
 
   return (
-    <nav className="py-4 flex items-center justify-center gap-2 border-t border-border" aria-label="Ballot switcher">
+    <nav className="py-4 flex items-center justify-center gap-2" aria-label="Ballot switcher">
       <button
         type="button"
         onClick={() => onSelectIndex?.(Math.max(0, currentBallotIndex - 1))}

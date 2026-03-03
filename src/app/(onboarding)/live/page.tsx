@@ -14,7 +14,6 @@ import type { DragEndEvent } from "@dnd-kit/core";
 import { AppShell } from "@/components/layout/AppShell";
 import { LiveTopbar } from "@/components/live/LiveTopbar";
 import { LiveStaging } from "@/components/live/LiveStaging";
-import { LiveCategoryPicker } from "@/components/live/LiveCategoryPicker";
 import {
   LiveNomineeList,
   getNomineeIdFromDroppableId,
@@ -142,30 +141,27 @@ function LivePageContent({
 
   return (
     <div className="flex-1 overflow-y-auto flex flex-col">
-      <LiveTopbar
-        categories={categoryList}
-        currentCategoryIndex={currentCategoryIndex}
-        onSelectCategoryIndex={setCurrentCategoryIndex}
-      />
+      <div className="shrink-0 border-b-0">
+        <LiveTopbar
+          categories={categoryList}
+          currentCategoryIndex={currentCategoryIndex}
+          onSelectCategoryIndex={setCurrentCategoryIndex}
+        />
+        <h2 className="text-center text-2xl font-display font-bold px-4 pb-3 border-b-0">
+          {currentCategory?.name ?? "—"}
+        </h2>
+      </div>
+      {myBallots.length > 1 && (
+        <LiveBallotNav
+          ballots={myBallots}
+          currentBallotIndex={currentBallotIndex}
+          onSelectIndex={setCurrentBallotIndex}
+        />
+      )}
       <LiveStaging
         showAwardStatue={!declaredWinnerId}
         shouldWiggle={true}
         isOverNominee={isOverNominee}
-      />
-      <LiveCategoryPicker
-        categoryName={currentCategory?.name ?? "—"}
-        currentIndex={currentCategoryIndex}
-        totalCategories={categories.length}
-        categories={categories.map((c) => ({ id: c.id, name: c.name }))}
-        onPrevious={() =>
-          setCurrentCategoryIndex((i) => Math.max(0, i - 1))
-        }
-        onNext={() =>
-          setCurrentCategoryIndex((i) =>
-            Math.min(categories.length - 1, i + 1)
-          )
-        }
-        onSelectIndex={setCurrentCategoryIndex}
       />
       <LiveNomineeList
         nominees={nominees}
@@ -176,11 +172,6 @@ function LivePageContent({
         isOverNominee={isOverNominee}
         selectedBallotNomineeId={selectedBallotNomineeId}
         onSelectWinner={onSelectWinner}
-      />
-      <LiveBallotNav
-        ballots={myBallots}
-        currentBallotIndex={currentBallotIndex}
-        onSelectIndex={setCurrentBallotIndex}
       />
     </div>
   );

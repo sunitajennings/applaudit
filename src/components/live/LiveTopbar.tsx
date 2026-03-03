@@ -28,7 +28,7 @@ export function LiveTopbar({
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   return (
-    <header className="flex items-center justify-between gap-3 py-3">
+    <header className="flex items-center justify-between gap-3 py-3 border-0">
       <Link
         href="/ballot"
         className="flex items-center gap-1 shrink-0 rounded-md p-2 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
