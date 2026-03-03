@@ -59,8 +59,18 @@ function getLeaderUserIds(
     userScores.set(user.id, best);
     if (best > maxScore) maxScore = best;
   }
-  const leaderIds = users.filter((u) => userScores.get(u.id) === maxScore).map((u) => u.id);
-  return leaderIds.length === 0 ? [] : [leaderIds[0]!];
+  return users.filter((u) => userScores.get(u.id) === maxScore).map((u) => u.id);
+}
+
+/** Ballot ids belonging to the user(s) in the lead (for topbar star). */
+function getLeaderBallotIds(
+  users: UserSummary[],
+  ballots: BallotSummary[],
+  choices: BallotChoice[],
+  declaredWinners: Record<string, string>
+): string[] {
+  const leaderUserIds = new Set(getLeaderUserIds(users, ballots, choices, declaredWinners));
+  return ballots.filter((b) => leaderUserIds.has(b.userId)).map((b) => b.id);
 }
 
 /** For current category, map nomineeId -> ballots that picked that nominee (prototype: from mock choices). */

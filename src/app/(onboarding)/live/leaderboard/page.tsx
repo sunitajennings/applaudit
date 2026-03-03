@@ -50,8 +50,7 @@ function getRankedUsers(
 function getLeaders(ranked: LeaderboardUserRow[]): LeaderboardUserRow[] {
   if (ranked.length === 0) return [];
   const topScore = ranked[0]!.correctCount;
-  const tied = ranked.filter((r) => r.correctCount === topScore);
-  return tied.length === 0 ? [] : [tied[0]!];
+  return ranked.filter((r) => r.correctCount === topScore);
 }
 
 export default function LeaderboardPage() {

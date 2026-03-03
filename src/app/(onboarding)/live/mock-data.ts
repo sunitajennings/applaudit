@@ -14,7 +14,6 @@ export const MOCK_USERS: UserSummary[] = [
 
 /** Prototype: current user (only their ballots appear in the bottom ballot nav). Later: from session/auth. */
 export const CURRENT_USER_ID = "user-1";
-
 /**
  * Prototype: mock ballots. Each ballot belongs to a user and has a name.
  * Later: getBallotsByUser / getBallotsByUserAndGroup.
