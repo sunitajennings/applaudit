@@ -95,11 +95,11 @@ function getBallotsWhoPickedNominee(
 function LivePageContent({
   myBallots,
   users,
+  categories: categoryList,
   currentCategoryIndex,
   setCurrentCategoryIndex,
   currentBallotIndex,
   setCurrentBallotIndex,
-  leaderUserIds,
   ballotsWhoPickedNominee,
   currentCategory,
   nominees,
@@ -109,14 +109,14 @@ function LivePageContent({
 }: {
   /** Current user's ballots only (for bottom nav). */
   myBallots: BallotSummary[];
-  /** All users (for topbar avatars and nominee card avatars). */
+  /** All users (for nominee card avatars). */
   users: UserSummary[];
+  /** Category list for topbar dropdown. */
+  categories: { id: string; name: string }[];
   currentCategoryIndex: number;
   setCurrentCategoryIndex: React.Dispatch<React.SetStateAction<number>>;
   currentBallotIndex: number;
   setCurrentBallotIndex: React.Dispatch<React.SetStateAction<number>>;
-  /** User ids currently in the lead (for topbar star). */
-  leaderUserIds: string[];
   ballotsWhoPickedNominee: Record<string, BallotSummary[]>;
   currentCategory: (typeof categories)[number] | undefined;
   nominees: ReturnType<typeof getNomineesForCategory>;
@@ -142,7 +142,11 @@ function LivePageContent({
 
   return (
     <div className="flex-1 overflow-y-auto flex flex-col">
-      <LiveTopbar users={users} leaderUserIds={leaderUserIds} />
+      <LiveTopbar
+        categories={categoryList}
+        currentCategoryIndex={currentCategoryIndex}
+        onSelectCategoryIndex={setCurrentCategoryIndex}
+      />
       <LiveStaging
         showAwardStatue={!declaredWinnerId}
         shouldWiggle={true}
@@ -310,7 +314,11 @@ export default function LivePage() {
     return (
       <AppShell variant="dark" showLogo={true} showAvatar={false}>
         <div className="max-w-md mx-auto w-full flex flex-col min-h-0">
-          <LiveTopbar users={MOCK_USERS} leaderUserIds={leaderUserIds} />
+          <LiveTopbar
+            categories={categories.map((c) => ({ id: c.id, name: c.name }))}
+            currentCategoryIndex={currentCategoryIndex}
+            onSelectCategoryIndex={setCurrentCategoryIndex}
+          />
           <LiveEmptyState />
         </div>
       </AppShell>
@@ -333,11 +341,11 @@ export default function LivePage() {
           <LivePageContent
             myBallots={myBallots}
             users={MOCK_USERS}
+            categories={categories.map((c) => ({ id: c.id, name: c.name }))}
             currentCategoryIndex={currentCategoryIndex}
             setCurrentCategoryIndex={setCurrentCategoryIndex}
             currentBallotIndex={currentBallotIndex}
             setCurrentBallotIndex={setCurrentBallotIndex}
-            leaderUserIds={leaderUserIds}
             ballotsWhoPickedNominee={ballotsWhoPickedNominee}
             currentCategory={currentCategory}
             nominees={nominees}
