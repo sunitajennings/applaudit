@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const EMOJI = "👏";
-const COUNT = 24;
-const DURATION_MS = 1200;
-const SPREAD = 120;
+const COUNT = 28;
+const DURATION_MS = 5000;
+const SIZE_MIN = 28;
+const SIZE_MAX = 56;
 
 export interface ConfettiCelebrationProps {
   /** Increment to trigger a new burst. */
@@ -14,7 +15,7 @@ export interface ConfettiCelebrationProps {
 }
 
 /**
- * Clapping-hands emoji burst: absolute positioned, short duration then remove.
+ * Clapping-hands emoji rain: falls from the top with varied sizes.
  * Trigger by changing the `trigger` prop (e.g. increment from parent).
  */
 export function ConfettiCelebration({ trigger }: ConfettiCelebrationProps) {
@@ -30,41 +31,40 @@ export function ConfettiCelebration({ trigger }: ConfettiCelebrationProps) {
   if (!visible) return null;
 
   const particles = Array.from({ length: COUNT }, (_, i) => {
-    const angle = (i / COUNT) * 2 * Math.PI + Math.random() * 0.5;
-    const distance = SPREAD + Math.random() * 60;
-    const x = Math.cos(angle) * distance + (Math.random() - 0.5) * 40;
-    const y = Math.sin(angle) * distance + (Math.random() - 0.5) * 40;
-    const delay = Math.random() * 0.15;
-    const size = 14 + Math.random() * 10;
-    return { id: i, x, y, delay, size };
+    const leftPercent = Math.random() * 100;
+    const delay = Math.random() * 0.4;
+    const duration = 3 + Math.random() * 2;
+    const size = SIZE_MIN + Math.random() * (SIZE_MAX - SIZE_MIN);
+    const drift = (Math.random() - 0.5) * 80;
+    return { id: i, leftPercent, delay, duration, size, drift };
   });
 
   return (
     <AnimatePresence>
       <div
-        className="pointer-events-none fixed inset-0 z-50 flex items-center justify-center"
+        className="pointer-events-none fixed inset-0 z-50 overflow-hidden"
         aria-hidden
       >
-        {particles.map(({ id, x, y, delay, size }) => (
+        {particles.map(({ id, leftPercent, delay, duration, size, drift }) => (
           <motion.span
             key={`${trigger}-${id}`}
-            className="absolute text-2xl"
+            className="absolute"
             style={{
-              left: "50%",
-              top: "50%",
+              left: `${leftPercent}%`,
+              top: "-5%",
               marginLeft: -size / 2,
               marginTop: -size / 2,
               fontSize: size,
             }}
-            initial={{ opacity: 1, x: 0, y: 0 }}
+            initial={{ opacity: 1, y: 0, x: 0 }}
             animate={{
-              opacity: 0,
-              x,
-              y,
+              opacity: 0.9,
+              y: "110vh",
+              x: drift,
               transition: {
-                duration: DURATION_MS / 1000,
+                duration,
                 delay,
-                ease: "easeOut",
+                ease: "linear",
               },
             }}
             exit={{ opacity: 0 }}

@@ -28,14 +28,14 @@ export function LiveStaging({
       <div
         ref={setNodeRef}
         className={cn(
-          "flex items-center justify-between gap-4 rounded-3xl bg-[#2B1927] px-4 py-3 transition-all duration-200 px-16",
+          "flex items-center justify-between gap-4 rounded-3xl bg-live-shell px-4 py-3 transition-all duration-200 py-8",
           isOver && "ring-2 ring-amber-500/50 ring-offset-2 ring-offset-background"
         )}
       >
-        <p className="text-xl font-display font-bold text-[#FEF6DA] leading-tight max-w-[60%]">
+        <p className="text-2xl font-display font-bold text-live-foreground leading-tight max-w-[60%]">
           And the award goes to...
         </p>
-        <div className="shrink-0 rounded-2xl border-2 border-dashed border-white/70 p-2 min-w-[4.5rem] min-h-[4.5rem] flex items-center justify-center">
+        <div className="shrink-0 rounded-2xl border-2 border-dashed border-live-statue-border p-2 min-w-[6rem] min-h-[6rem] flex items-center justify-center">
           {showAwardStatue ? (
             <AwardStatueDraggable
               shouldWiggle={shouldWiggle}

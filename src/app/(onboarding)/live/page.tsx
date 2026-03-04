@@ -4,13 +4,14 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   DndContext,
+  DragOverlay,
   PointerSensor,
   KeyboardSensor,
   useSensor,
   useSensors,
   useDndMonitor,
 } from "@dnd-kit/core";
-import type { DragEndEvent } from "@dnd-kit/core";
+import type { DragEndEvent, DragStartEvent } from "@dnd-kit/core";
 import { AppShell } from "@/components/layout/AppShell";
 import { LiveTopbar } from "@/components/live/LiveTopbar";
 import { LiveStaging } from "@/components/live/LiveStaging";
@@ -20,7 +21,10 @@ import {
 } from "@/components/live/LiveNomineeList";
 import { LiveBallotNav } from "@/components/live/LiveBallotNav";
 import { ConfettiCelebration } from "@/components/live/ConfettiCelebration";
-import { AWARD_STATUE_ID } from "@/components/live/AwardStatueDraggable";
+import {
+  AWARD_STATUE_ID,
+  AwardStatueDragPreview,
+} from "@/components/live/AwardStatueDraggable";
 import { STAGING_DROPPABLE_ID } from "@/components/live/LiveStaging";
 import {
   AWARD_SHOW_ID,
@@ -158,21 +162,23 @@ function LivePageContent({
           onSelectIndex={setCurrentBallotIndex}
         />
       )}
-      <LiveStaging
-        showAwardStatue={!declaredWinnerId}
-        shouldWiggle={true}
-        isOverNominee={isOverNominee}
-      />
-      <LiveNomineeList
-        nominees={nominees}
-        declaredWinnerNomineeId={declaredWinnerId}
-        ballotsWhoPickedNominee={ballotsWhoPickedNominee}
-        users={users}
-        overNomineeId={overNomineeId}
-        isOverNominee={isOverNominee}
-        selectedBallotNomineeId={selectedBallotNomineeId}
-        onSelectWinner={onSelectWinner}
-      />
+      <div className="bg-live-card-bg px-4 py-2 pb-8 rounded-[24px]">
+        <LiveStaging
+          showAwardStatue={!declaredWinnerId}
+          shouldWiggle={true}
+          isOverNominee={isOverNominee}
+        />
+        <LiveNomineeList
+          nominees={nominees}
+          declaredWinnerNomineeId={declaredWinnerId}
+          ballotsWhoPickedNominee={ballotsWhoPickedNominee}
+          users={users}
+          overNomineeId={overNomineeId}
+          isOverNominee={isOverNominee}
+          selectedBallotNomineeId={selectedBallotNomineeId}
+          onSelectWinner={onSelectWinner}
+        />
+      </div>
     </div>
   );
 }
@@ -201,6 +207,7 @@ export default function LivePage() {
   const [confettiTrigger, setConfettiTrigger] = useState(0);
   const [mounted, setMounted] = useState(false);
   const [liveAnnouncement, setLiveAnnouncement] = useState("");
+  const [activeDragId, setActiveDragId] = useState<string | null>(null);
 
   useEffect(() => {
     setDeclaredWinners(getDeclaredWinners(AWARD_SHOW_ID));
@@ -226,7 +233,12 @@ export default function LivePage() {
     setTimeout(() => setLiveAnnouncement(""), 3000);
   };
 
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveDragId(String(event.active.id));
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
+    setActiveDragId(null);
     const { active, over } = event;
     if (active.id !== AWARD_STATUE_ID || !currentCategory || over == null) return;
 
@@ -328,7 +340,16 @@ export default function LivePage() {
       </div>
       <ConfettiCelebration trigger={confettiTrigger} />
       <div className="max-w-md mx-auto w-full flex flex-col min-h-0">
-        <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
+        <DndContext
+          sensors={sensors}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+        >
+          <DragOverlay>
+            {activeDragId === AWARD_STATUE_ID ? (
+              <AwardStatueDragPreview />
+            ) : null}
+          </DragOverlay>
           <LivePageContent
             myBallots={myBallots}
             users={MOCK_USERS}

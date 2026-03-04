@@ -39,6 +39,22 @@
   --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
   --color-gold: var(--gold);
+  /* Live view palette (used on dark/live page) */
+  --color-live-shell: var(--live-shell);
+  --color-live-foreground: var(--live-foreground);
+  --color-live-statue-border: var(--live-statue-border);
+  --color-live-card-bg: var(--live-card-bg);
+  --color-live-card-border: var(--live-card-border);
+  --color-live-pick-border: var(--live-pick-border);
+  --color-live-pick-card-bg: var(--live-pick-card-bg);
+  --color-live-pill-bg: var(--live-pill-bg);
+  --color-live-pill-border: var(--live-pill-border);
+  --color-live-pill-foreground: var(--live-pill-foreground);
+  --color-live-winner-border: var(--live-winner-border);
+  --color-live-winner-bg: var(--live-winner-bg);
+  --color-live-winner-bg-hover: var(--live-winner-bg-hover);
+  --color-live-winner-foreground: var(--live-winner-foreground);
+  --color-live-winner-ring: var(--live-winner-ring);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -83,6 +99,21 @@
   --sidebar-accent-foreground: #2B1927;
   --sidebar-border: #D4CFC5;
   --sidebar-ring: #FF5E6C;
+  --live-shell: #2B1927;
+  --live-foreground: #FFF5D7;
+  --live-statue-border: #FFF5D7;
+  --live-card-bg: #2B1927;
+  --live-card-border: #FFF5D7;
+  --live-pick-border: #EE8C93;
+  --live-pick-card-bg: #40202E;
+  --live-pill-bg: #4F3642;
+  --live-pill-border: #EE8C93;
+  --live-pill-foreground: #FFF5D7;
+  --live-winner-border: var(--color-yellow-50);
+  --live-winner-bg: #150C13;
+  --live-winner-bg-hover: var(--color-rose-800);
+  --live-winner-foreground: #FFF5D7;
+  --live-winner-ring: var(--color-yellow-400);
 }
 
 .dark {
@@ -119,6 +150,22 @@
   --sidebar-accent-foreground: #FEF6DA;
   --sidebar-border: rgba(245, 240, 230, 0.1);
   --sidebar-ring: #FF5E6C;
+  /* Live view (staging strip, nominee cards, "your pick" pill) */
+  --live-shell: #261C29;
+  --live-foreground: #FDFCF5;
+  --live-statue-border: #FDFCF5;
+  --live-card-bg: #3C3640;
+  --live-card-border: rgba(255, 255, 255, 0.1);
+  --live-pick-border: #EE8C93;
+  --live-pick-card-bg: #4F3642;
+  --live-pill-bg: #FFFFFF;
+  --live-pill-border: #EE8C93;
+  --live-pill-foreground: #261C29;
+  --live-winner-border: rgba(245, 158, 11, 0.6);
+  --live-winner-bg: rgba(245, 158, 11, 0.1);
+  --live-winner-bg-hover: rgba(245, 158, 11, 0.15);
+  --live-winner-foreground: #FDFCF5;
+  --live-winner-ring: rgba(245, 158, 11, 0.4);
 }
 
 @layer base {
