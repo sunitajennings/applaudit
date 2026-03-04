@@ -151,7 +151,7 @@ function LivePageContent({
           currentCategoryIndex={currentCategoryIndex}
           onSelectCategoryIndex={setCurrentCategoryIndex}
         />
-        <h2 className="text-center text-2xl font-display font-bold px-4 pb-3 border-b-0">
+        <h2 className="text-center text-3xl font-display font-bold py-3">
           {currentCategory?.name ?? "—"}
         </h2>
       </div>

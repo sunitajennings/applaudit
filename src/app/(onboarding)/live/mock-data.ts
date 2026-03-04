@@ -21,8 +21,8 @@ export const CURRENT_USER_ID = "user-1";
 export const MOCK_BALLOTS: BallotSummary[] = [
   { id: "mock-ballot-1", userId: "user-1", name: "Head" },
   { id: "mock-ballot-2", userId: "user-1", name: "Heart" },
-  { id: "mock-ballot-3", userId: "user-2", name: "Oscar Night" },
-  { id: "mock-ballot-4", userId: "user-3", name: "Dark Horse" },
+  // { id: "mock-ballot-3", userId: "user-1", name: "Oscar Night" },
+  // { id: "mock-ballot-4", userId: "user-1", name: "Dark Horse" },
 ];
 
 function getMockChoices(): BallotChoice[] {

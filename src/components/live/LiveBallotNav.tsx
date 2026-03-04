@@ -33,12 +33,12 @@ export function LiveBallotNav({
       <Tabs
         value={value}
         onValueChange={handleValueChange}
-        className="w-full max-w-[280px]"
+        className="w-full "
       >
         <TabsList
           className={cn(
-            "w-full rounded-full h-10 p-0.5 gap-0",
-            "bg-[#261C29]",
+            "w-full rounded-[12px] h-10 p-1 gap-0",
+            "bg-live-shell",
             "inline-flex"
           )}
         >
@@ -47,7 +47,7 @@ export function LiveBallotNav({
               key={ballot.id}
               value={ballot.id}
               className={cn(
-                "flex-1 rounded-full border-2 text-sm font-medium transition-colors",
+                "flex-1 rounded-[10px] border-2 text-sm font-bold transition-colors",
                 "data-[state=inactive]:bg-transparent data-[state=inactive]:text-[#EE8C93] data-[state=inactive]:border-transparent",
                 "data-[state=active]:bg-[#FDFCF5] data-[state=active]:text-[#261C29] data-[state=active]:border-[#261C29]"
               )}
