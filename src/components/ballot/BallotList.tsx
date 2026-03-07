@@ -28,9 +28,21 @@ export function BallotList({ userId, groupId }: BallotListProps) {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-display font-bold">
-        {groupId ? "My Party" : "My Ballots"}
-      </h2>
+      <div className="flex items-center justify-between gap-3">
+        <h2 className="text-lg font-display font-bold">
+          {groupId ? "My Party" : "My Ballots"}
+        </h2>
+        <Button
+          type="button"
+          size="sm"
+          className="rounded-full shrink-0"
+          onClick={() => router.push("/ballot/new")}
+          aria-label="Create new ballot"
+        >
+          <Plus className="size-4 shrink-0" aria-hidden />
+          New
+        </Button>
+      </div>
 
       {ballots.length === 0 && (
         <p className="text-sm text-muted-foreground text-center">
@@ -88,30 +100,6 @@ export function BallotList({ userId, groupId }: BallotListProps) {
             );
           })}
         </ul>
-      )}
-
-      {ballots.length === 0 ? (
-        <Button
-          type="button"
-          size="2xl"
-          className="w-full rounded-full font-display font-bold"
-          onClick={() => router.push("/ballot/new")}
-        >
-          <Plus className="size-5 shrink-0" aria-hidden />
-          Create new ballot
-        </Button>
-      ) : (
-        <div className="flex justify-center">
-          <Button
-            type="button"
-            size="icon"
-            className="rounded-full"
-            onClick={() => router.push("/ballot/new")}
-            aria-label="Create new ballot"
-          >
-            <Plus className="size-5" aria-hidden />
-          </Button>
-        </div>
       )}
     </div>
   );

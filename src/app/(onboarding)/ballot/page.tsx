@@ -29,6 +29,18 @@ export default function BallotPage() {
         <div className="space-y-6">
           <Countdown />
 
+          <Button
+            className="w-full rounded-full font-display font-bold"
+            size="lg"
+            onClick={() => router.push("/live")}
+          >
+            Let the Show Begin!
+          </Button>
+
+          {user && (
+            <BallotList userId={user.id} groupId={profile?.groupId ?? null} />
+          )}
+
           <Link
             href="/ballot/red-carpet"
             className="relative flex items-stretch gap-0 rounded-2xl overflow-visible border border-primary shadow-md hover:shadow-lg transition-shadow focus-visible:outline focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
@@ -88,10 +100,6 @@ export default function BallotPage() {
               </div>
             </div>
           </Link>
-
-          {user && (
-            <BallotList userId={user.id} groupId={profile?.groupId ?? null} />
-          )}
         </div>
       </PageTransition>
     </AppShell>

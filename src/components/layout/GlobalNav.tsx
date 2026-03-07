@@ -38,6 +38,11 @@ export function GlobalNav({ className }: GlobalNavProps) {
 
   const avatarInitials = profileInitials || userEmailInitials || "??";
 
+  // Hide global nav on live page (live view has its own topbar)
+  if (pathname.startsWith("/live")) {
+    return null;
+  }
+
   return (
     <nav
       className={cn(
