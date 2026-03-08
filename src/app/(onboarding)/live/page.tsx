@@ -39,7 +39,11 @@ import {
 } from "@/lib/live/storage";
 import type { BallotSummary, UserSummary } from "@/lib/live/types";
 import type { BallotChoice } from "@/lib/ballot/types";
-import { MOCK_BALLOTS, MOCK_CHOICES, MOCK_USERS, CURRENT_USER_ID } from "./mock-data";
+import { useSession } from "@/lib/store/session";
+import { createClient } from "@/lib/supabase/client";
+import { getBallotsByUser, getChoicesForBallot } from "@/lib/queries/ballots";
+import { getProfilesByGroup } from "@/lib/queries/profiles";
+import { MOCK_BALLOTS, MOCK_CHOICES } from "./mock-data";
 
 /** User is in the lead if their best ballot has the most correct guesses. */
 function getLeaderUserIds(
@@ -199,6 +203,8 @@ function LiveEmptyState() {
 }
 
 export default function LivePage() {
+  const { user, profile } = useSession();
+  const [supabase] = useState(() => createClient());
   const [declaredWinners, setDeclaredWinners] = useState<Record<string, string>>(
     () => ({})
   );
@@ -208,11 +214,41 @@ export default function LivePage() {
   const [mounted, setMounted] = useState(false);
   const [liveAnnouncement, setLiveAnnouncement] = useState("");
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
+  const [myBallots, setMyBallots] = useState<BallotSummary[]>([]);
+  const [myChoices, setMyChoices] = useState<BallotChoice[]>([]);
+  const [allUsers, setAllUsers] = useState<UserSummary[]>([]);
 
   useEffect(() => {
     setDeclaredWinners(getDeclaredWinners(AWARD_SHOW_ID));
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!user?.id) {
+      setMyBallots([]);
+      return;
+    }
+    getBallotsByUser(supabase, user.id).then(setMyBallots).catch(console.error);
+  }, [user?.id, supabase]);
+
+  useEffect(() => {
+    if (myBallots.length === 0) {
+      setMyChoices([]);
+      return;
+    }
+    Promise.all(myBallots.map((b) => getChoicesForBallot(supabase, b.id)))
+      .then((results) => setMyChoices(results.flat()))
+      .catch(console.error);
+  }, [myBallots, supabase]);
+
+  useEffect(() => {
+    if (!profile) return;
+    getProfilesByGroup(supabase, profile.groupId)
+      .then((profiles) =>
+        setAllUsers(profiles.map((p) => ({ id: p.id, name: p.nickname ?? p.email })))
+      )
+      .catch(console.error);
+  }, [profile?.groupId, supabase]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -270,15 +306,9 @@ export default function LivePage() {
   /** All ballots (all users) for leader calculation and topbar. */
   const allBallots = MOCK_BALLOTS;
 
-  /** Current user's ballots only — only these appear in the bottom ballot nav. */
-  const myBallots = useMemo(
-    () => allBallots.filter((b) => b.userId === CURRENT_USER_ID),
-    [allBallots]
-  );
-
   const leaderUserIds = useMemo(
-    () => getLeaderUserIds(MOCK_USERS, allBallots, MOCK_CHOICES, declaredWinners),
-    [allBallots, declaredWinners]
+    () => getLeaderUserIds(allUsers, allBallots, MOCK_CHOICES, declaredWinners),
+    [allUsers, allBallots, declaredWinners]
   );
 
   const ballotsWhoPickedNominee = useMemo(
@@ -297,11 +327,11 @@ export default function LivePage() {
   const selectedBallotNomineeId = useMemo(() => {
     const ballot = myBallots[currentBallotIndex];
     if (!ballot || !currentCategory) return null;
-    const choice = MOCK_CHOICES.find(
+    const choice = myChoices.find(
       (c) => c.ballotId === ballot.id && c.categoryId === currentCategory.id
     );
     return choice?.nomineeId ?? null;
-  }, [myBallots, currentBallotIndex, currentCategory]);
+  }, [myBallots, myChoices, currentBallotIndex, currentCategory]);
 
   if (!mounted) {
     return (
@@ -352,7 +382,7 @@ export default function LivePage() {
           </DragOverlay>
           <LivePageContent
             myBallots={myBallots}
-            users={MOCK_USERS}
+            users={allUsers}
             categories={categories.map((c) => ({ id: c.id, name: c.name }))}
             currentCategoryIndex={currentCategoryIndex}
             setCurrentCategoryIndex={setCurrentCategoryIndex}

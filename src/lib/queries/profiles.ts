@@ -46,6 +46,33 @@ export async function fetchOrCreateProfile(
 }
 
 /**
+ * Fetch all profiles belonging to a group, identified via the ballots table.
+ * If groupId is null, returns profiles for users who have ballots with no group_id.
+ */
+export async function getProfilesByGroup(
+  supabase: SupabaseClient,
+  groupId: string | null,
+): Promise<Profile[]> {
+  const ballotQuery = supabase.from("ballots").select("user_id");
+  const { data: ballotRows, error: ballotError } = groupId
+    ? await ballotQuery.eq("group_id", groupId)
+    : await ballotQuery.is("group_id", null);
+
+  if (ballotError) throw ballotError;
+
+  const userIds = [...new Set((ballotRows ?? []).map((r) => r.user_id as string))];
+  if (userIds.length === 0) return [];
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .in("id", userIds);
+
+  if (error) throw error;
+  return (data ?? []) as Profile[];
+}
+
+/**
  * Update profile fields (nickname, avatar_url) in the database.
  */
 export async function updateProfileInDb(

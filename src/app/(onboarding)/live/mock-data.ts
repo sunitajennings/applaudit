@@ -2,18 +2,9 @@ import {
   categories,
   getNomineesForCategory,
 } from "@/data/oscar-2026";
-import type { UserSummary, BallotSummary } from "@/lib/live/types";
+import type { BallotSummary } from "@/lib/live/types";
 import type { BallotChoice } from "@/lib/ballot/types";
 
-/** Prototype: mock users. Later: real users from auth/DB. */
-export const MOCK_USERS: UserSummary[] = [
-  { id: "user-1", name: "Camille" },
-  { id: "user-2", name: "Colleen" },
-  { id: "user-3", name: "Sunita" },
-];
-
-/** Prototype: current user (only their ballots appear in the bottom ballot nav). Later: from session/auth. */
-export const CURRENT_USER_ID = "user-1";
 /**
  * Prototype: mock ballots. Each ballot belongs to a user and has a name.
  * Later: getBallotsByUser / getBallotsByUserAndGroup.
