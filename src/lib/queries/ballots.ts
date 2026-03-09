@@ -57,6 +57,23 @@ export async function getBallotsByUser(
   return (data ?? []).map(toBallot);
 }
 
+export async function getBallotsByGroup(
+  supabase: SupabaseClient,
+  groupId: string | null,
+): Promise<Ballot[]> {
+  const query = supabase
+    .from("ballots")
+    .select("*")
+    .order("updated_at", { ascending: false });
+
+  const { data, error } = groupId
+    ? await query.eq("group_id", groupId)
+    : await query.is("group_id", null);
+
+  if (error) throw error;
+  return (data ?? []).map(toBallot);
+}
+
 export async function getBallotById(
   supabase: SupabaseClient,
   id: string,
@@ -94,6 +111,21 @@ export async function getChoicesForBallot(
     .from("ballot_choices")
     .select("*")
     .eq("ballot_id", ballotId);
+
+  if (error) throw error;
+  return (data ?? []).map(toChoice);
+}
+
+export async function getChoicesForBallots(
+  supabase: SupabaseClient,
+  ballotIds: string[],
+): Promise<BallotChoice[]> {
+  if (ballotIds.length === 0) return [];
+
+  const { data, error } = await supabase
+    .from("ballot_choices")
+    .select("*")
+    .in("ballot_id", ballotIds);
 
   if (error) throw error;
   return (data ?? []).map(toChoice);

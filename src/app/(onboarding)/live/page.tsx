@@ -41,16 +41,22 @@ import type { BallotSummary, UserSummary } from "@/lib/live/types";
 import type { BallotChoice } from "@/lib/ballot/types";
 import { useSession } from "@/lib/store/session";
 import { createClient } from "@/lib/supabase/client";
-import { getBallotsByUser, getChoicesForBallot } from "@/lib/queries/ballots";
+import {
+  getBallotsByUser,
+  getBallotsByGroup,
+  getChoicesForBallot,
+  getChoicesForBallots,
+} from "@/lib/queries/ballots";
 import { getProfilesByGroup } from "@/lib/queries/profiles";
-import { MOCK_BALLOTS, MOCK_CHOICES } from "./mock-data";
+
+const GROUP_ID = null;
 
 /** User is in the lead if their best ballot has the most correct guesses. */
 function getLeaderUserIds(
   users: UserSummary[],
   ballots: BallotSummary[],
   choices: BallotChoice[],
-  declaredWinners: Record<string, string>
+  declaredWinners: Record<string, string>,
 ): string[] {
   if (users.length === 0 || ballots.length === 0) return [];
   const ballotsByUser = new Map<string, BallotSummary[]>();
@@ -62,11 +68,20 @@ function getLeaderUserIds(
   const userScores = new Map<string, number>();
   for (const user of users) {
     const userBallots = ballotsByUser.get(user.id) ?? [];
-    const best = userBallots.length === 0 ? 0 : Math.max(...userBallots.map((b) => getCorrectGuessCount(b.id, choices, declaredWinners)));
+    const best =
+      userBallots.length === 0
+        ? 0
+        : Math.max(
+            ...userBallots.map((b) =>
+              getCorrectGuessCount(b.id, choices, declaredWinners),
+            ),
+          );
     userScores.set(user.id, best);
     if (best > maxScore) maxScore = best;
   }
-  return users.filter((u) => userScores.get(u.id) === maxScore).map((u) => u.id);
+  return users
+    .filter((u) => userScores.get(u.id) === maxScore)
+    .map((u) => u.id);
 }
 
 /** Ballot ids belonging to the user(s) in the lead (for topbar star). */
@@ -74,9 +89,11 @@ function getLeaderBallotIds(
   users: UserSummary[],
   ballots: BallotSummary[],
   choices: BallotChoice[],
-  declaredWinners: Record<string, string>
+  declaredWinners: Record<string, string>,
 ): string[] {
-  const leaderUserIds = new Set(getLeaderUserIds(users, ballots, choices, declaredWinners));
+  const leaderUserIds = new Set(
+    getLeaderUserIds(users, ballots, choices, declaredWinners),
+  );
   return ballots.filter((b) => leaderUserIds.has(b.userId)).map((b) => b.id);
 }
 
@@ -84,7 +101,7 @@ function getLeaderBallotIds(
 function getBallotsWhoPickedNominee(
   categoryId: string,
   ballots: BallotSummary[],
-  choices: BallotChoice[]
+  choices: BallotChoice[],
 ): Record<string, BallotSummary[]> {
   const byNominee: Record<string, BallotSummary[]> = {};
   const ballotMap = new Map(ballots.map((b) => [b.id, b]));
@@ -142,10 +159,9 @@ function LivePageContent({
   const overIdStr = overId != null ? String(overId) : null;
   const overNomineeId = useMemo(
     () => getNomineeIdFromDroppableId(overIdStr),
-    [overIdStr]
+    [overIdStr],
   );
-  const isOverNominee =
-    overIdStr != null && overIdStr.startsWith("nominee-");
+  const isOverNominee = overIdStr != null && overIdStr.startsWith("nominee-");
 
   return (
     <div className="flex-1 overflow-y-auto flex flex-col">
@@ -191,7 +207,9 @@ function LivePageContent({
 function LiveEmptyState() {
   return (
     <div className="flex-1 overflow-y-auto flex flex-col items-center justify-center py-12 px-4 text-center">
-      <p className="text-muted-foreground mb-4">Create a ballot first to track winners and see the leaderboard.</p>
+      <p className="text-muted-foreground mb-4">
+        Create a ballot first to track winners and see the leaderboard.
+      </p>
       <Link
         href="/ballot"
         className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
@@ -205,9 +223,9 @@ function LiveEmptyState() {
 export default function LivePage() {
   const { user, profile } = useSession();
   const [supabase] = useState(() => createClient());
-  const [declaredWinners, setDeclaredWinners] = useState<Record<string, string>>(
-    () => ({})
-  );
+  const [declaredWinners, setDeclaredWinners] = useState<
+    Record<string, string>
+  >(() => ({}));
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [currentBallotIndex, setCurrentBallotIndex] = useState(0);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
@@ -217,6 +235,8 @@ export default function LivePage() {
   const [myBallots, setMyBallots] = useState<BallotSummary[]>([]);
   const [myChoices, setMyChoices] = useState<BallotChoice[]>([]);
   const [allUsers, setAllUsers] = useState<UserSummary[]>([]);
+  const [allBallots, setAllBallots] = useState<BallotSummary[]>([]);
+  const [allChoices, setAllChoices] = useState<BallotChoice[]>([]);
 
   useEffect(() => {
     setDeclaredWinners(getDeclaredWinners(AWARD_SHOW_ID));
@@ -243,16 +263,32 @@ export default function LivePage() {
 
   useEffect(() => {
     if (!profile) return;
-    getProfilesByGroup(supabase, profile.groupId)
+    getProfilesByGroup(supabase, GROUP_ID)
       .then((profiles) =>
-        setAllUsers(profiles.map((p) => ({ id: p.id, name: p.nickname ?? p.email })))
+        setAllUsers(
+          profiles.map((p) => ({ id: p.id, name: p.nickname ?? p.email })),
+        ),
       )
       .catch(console.error);
-  }, [profile?.groupId, supabase]);
+  }, [profile, supabase]);
+
+  useEffect(() => {
+    if (!profile) return;
+    getBallotsByGroup(supabase, GROUP_ID)
+      .then(setAllBallots)
+      .catch(console.error);
+  }, [profile, supabase]);
+
+  useEffect(() => {
+    const ballotIds = allBallots.map((b) => b.id);
+    getChoicesForBallots(supabase, ballotIds)
+      .then(setAllChoices)
+      .catch(console.error);
+  }, [allBallots, supabase]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
-    useSensor(KeyboardSensor)
+    useSensor(KeyboardSensor),
   );
 
   const currentCategory = categories[currentCategoryIndex];
@@ -276,13 +312,17 @@ export default function LivePage() {
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveDragId(null);
     const { active, over } = event;
-    if (active.id !== AWARD_STATUE_ID || !currentCategory || over == null) return;
+    if (active.id !== AWARD_STATUE_ID || !currentCategory || over == null)
+      return;
 
     const overIdStr = String(over.id);
     if (overIdStr.startsWith("nominee-")) {
       const nomineeId = overIdStr.slice("nominee-".length);
       setDeclaredWinner(AWARD_SHOW_ID, currentCategory.id, nomineeId);
-      setDeclaredWinners((prev) => ({ ...prev, [currentCategory.id]: nomineeId }));
+      setDeclaredWinners((prev) => ({
+        ...prev,
+        [currentCategory.id]: nomineeId,
+      }));
       const nominee = nominees.find((n) => n.id === nomineeId);
       announceWinner(nominee?.name ?? "Winner");
     } else if (overIdStr === STAGING_DROPPABLE_ID) {
@@ -299,28 +339,24 @@ export default function LivePage() {
     if (!currentCategory) return;
     const nominee = nominees.find((n) => n.id === nomineeId);
     setDeclaredWinner(AWARD_SHOW_ID, currentCategory.id, nomineeId);
-    setDeclaredWinners((prev) => ({ ...prev, [currentCategory.id]: nomineeId }));
+    setDeclaredWinners((prev) => ({
+      ...prev,
+      [currentCategory.id]: nomineeId,
+    }));
     announceWinner(nominee?.name ?? "Winner");
   };
 
-  /** All ballots (all users) for leader calculation and topbar. */
-  const allBallots = MOCK_BALLOTS;
-
   const leaderUserIds = useMemo(
-    () => getLeaderUserIds(allUsers, allBallots, MOCK_CHOICES, declaredWinners),
-    [allUsers, allBallots, declaredWinners]
+    () => getLeaderUserIds(allUsers, allBallots, allChoices, declaredWinners),
+    [allUsers, allBallots, allChoices, declaredWinners],
   );
 
   const ballotsWhoPickedNominee = useMemo(
     () =>
       currentCategory
-        ? getBallotsWhoPickedNominee(
-            currentCategory.id,
-            allBallots,
-            MOCK_CHOICES
-          )
+        ? getBallotsWhoPickedNominee(currentCategory.id, allBallots, allChoices)
         : {},
-    [currentCategory, allBallots]
+    [currentCategory, allBallots, allChoices],
   );
 
   /** Current (my) ballot's choice for current category (for "Your pick" highlight). */
@@ -328,7 +364,7 @@ export default function LivePage() {
     const ballot = myBallots[currentBallotIndex];
     if (!ballot || !currentCategory) return null;
     const choice = myChoices.find(
-      (c) => c.ballotId === ballot.id && c.categoryId === currentCategory.id
+      (c) => c.ballotId === ballot.id && c.categoryId === currentCategory.id,
     );
     return choice?.nomineeId ?? null;
   }, [myBallots, myChoices, currentBallotIndex, currentCategory]);
