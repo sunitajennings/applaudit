@@ -2,7 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { ArrowRight, ChevronLeft } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
+import { PageTransition } from "@/components/layout/PageTransition";
+import { Button } from "@/components/ui/button";
 import {
   getDeclaredWinners,
   getCorrectGuessCount,
@@ -76,30 +79,40 @@ export default function LeaderboardPage() {
 
   if (!mounted) {
     return (
-      <AppShell variant="dark" showLogo={true} showAvatar={false}>
-        <div className="max-w-md mx-auto w-full flex flex-col min-h-0">
-          <div className="flex-1" />
-        </div>
+      <AppShell variant="light" showLogo={true} showAvatar={false}>
+        <PageTransition className="max-w-md mx-auto w-full">
+          <div className="flex flex-col min-h-0 flex-1">
+            <div className="flex-1" />
+          </div>
+        </PageTransition>
       </AppShell>
     );
   }
 
   return (
-    <AppShell variant="dark" showLogo={true} showAvatar={false}>
-      <div className="max-w-md mx-auto w-full flex flex-col min-h-0">
-        <header className="flex items-center justify-between gap-3 py-3 border-b border-border">
-          <Link
-            href="/live"
-            className="text-sm font-medium text-muted-foreground hover:text-foreground"
-          >
-            ← Back to live
-          </Link>
-        </header>
+    <AppShell variant="light" showLogo={true} showAvatar={false}>
+      <PageTransition className="max-w-md mx-auto w-full flex flex-col min-h-0">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="icon" asChild>
+            <Link href="/ballot" aria-label="Back to ballots">
+              <ChevronLeft className="size-5" />
+            </Link>
+          </Button>
+          <h1 className="text-2xl font-display font-bold flex-1 text-center pr-9">
+            Leaderboard
+          </h1>
+          <Button variant="outline" asChild>
+            <Link href="/live" aria-label="Back to live" className="flex items-center gap-1.5">
+              <ArrowRight className="size-4" />
+              Back to show
+            </Link>
+          </Button>
+        </div>
         <div className="flex-1 overflow-y-auto flex flex-col py-6">
           <LeaderboardHero leaders={leaders} />
           <LeaderboardList rankedUsers={nonLeaderRanked} />
         </div>
-      </div>
+      </PageTransition>
     </AppShell>
   );
 }

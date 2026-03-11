@@ -109,6 +109,7 @@ function LivePageContent({
   declaredWinnerId,
   selectedBallotNomineeId,
   onSelectWinner,
+  leaderNames,
 }: {
   /** Current user's ballots only (for bottom nav). */
   myBallots: BallotSummary[];
@@ -126,6 +127,8 @@ function LivePageContent({
   declaredWinnerId: string | undefined;
   selectedBallotNomineeId: string | null;
   onSelectWinner: (nomineeId: string) => void;
+  /** Names of user(s) currently in the lead (best ballot score). */
+  leaderNames: string[];
 }) {
   const [overId, setOverId] = useState<string | number | null>(null);
 
@@ -143,6 +146,13 @@ function LivePageContent({
   const isOverNominee =
     overIdStr != null && overIdStr.startsWith("nominee-");
 
+  const leaderLabel =
+    leaderNames.length === 0
+      ? null
+      : leaderNames.length === 1
+        ? `Current leader: ${leaderNames[0]}`
+        : `Current leaders: ${leaderNames.join(" & ")}`;
+
   return (
     <div className="flex-1 overflow-y-auto flex flex-col">
       <div className="shrink-0 border-b-0">
@@ -151,6 +161,11 @@ function LivePageContent({
           currentCategoryIndex={currentCategoryIndex}
           onSelectCategoryIndex={setCurrentCategoryIndex}
         />
+        {leaderLabel && (
+          <p className="text-center text-sm text-muted-foreground pt-1 px-2">
+            {leaderLabel}
+          </p>
+        )}
         <h2 className="text-center text-3xl font-display font-bold py-3">
           {currentCategory?.name ?? "—"}
         </h2>
@@ -364,6 +379,7 @@ export default function LivePage() {
             declaredWinnerId={declaredWinnerId}
             selectedBallotNomineeId={selectedBallotNomineeId}
             onSelectWinner={handleSelectWinner}
+            leaderNames={MOCK_USERS.filter((u) => leaderUserIds.includes(u.id)).map((u) => u.name)}
           />
         </DndContext>
       </div>

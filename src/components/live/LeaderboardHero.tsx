@@ -1,6 +1,11 @@
 "use client";
 
-import { Star } from "lucide-react";
+import Image from "next/image";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+} from "@/components/ui/card";
 import type { LeaderboardUserRow } from "@/lib/live/types";
 
 export interface LeaderboardHeroProps {
@@ -8,31 +13,41 @@ export interface LeaderboardHeroProps {
   leaders: LeaderboardUserRow[];
 }
 
-/** Hero: AwardStatue image, leader user name(s), "Guessed X correct winners". Dumb UI. */
+/** Hero: Current Leader card with award image, single leader name, "X picks". */
 export function LeaderboardHero({ leaders }: LeaderboardHeroProps) {
-  if (leaders.length === 0) {
-    return (
-      <section className="text-center py-8" aria-label="Leaderboard hero">
-        <div className="w-16 h-16 mx-auto rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500 border border-amber-500/40 mb-4">
-          <Star className="w-8 h-8" strokeWidth={1.5} fill="currentColor" />
-        </div>
-        <p className="text-muted-foreground">No one on the board yet</p>
-      </section>
-    );
-  }
-
-  const count = leaders[0]!.correctCount;
-  const names = leaders.map((l) => l.user.name).join(" | ");
+  const leader = leaders[0];
 
   return (
-    <section className="text-center py-8" aria-label="Leaderboard hero">
-      <div className="w-16 h-16 mx-auto rounded-full bg-amber-500/20 flex items-center justify-center text-amber-500 border border-amber-500/40 mb-4">
-        <Star className="w-8 h-8" strokeWidth={1.5} fill="currentColor" />
-      </div>
-      <h2 className="text-xl font-semibold text-foreground">{names}</h2>
-      <p className="text-muted-foreground mt-1">
-        Guessed {count} correct winner{count !== 1 ? "s" : ""}
-      </p>
-    </section>
+    <Card variant="dark" className="overflow-hidden shadow-md w-3/4 mx-auto" aria-labelledby="leaderboard-current-leader">
+      <CardHeader>
+        <h2 id="leaderboard-current-leader" className="text-lg font-display font-bold leading-none">
+          Current Leader
+        </h2>
+      </CardHeader>
+      <CardContent className="flex flex-col items-center gap-1 pb-6">
+        <div className="w-[56px] h-[142px] flex items-center justify-center">
+          <Image
+            src="/images/award.svg"
+            alt=""
+            width={56}
+            height={142}
+          />
+        </div>
+        {leader ? (
+          <>
+            <p className="font-display font-bold text-lg text-white">
+              {leader.user.name}
+            </p>
+            <p className="font-display text-base text-[#FEF6DA]">
+              {leader.correctCount} pick{leader.correctCount !== 1 ? "s" : ""}
+            </p>
+          </>
+        ) : (
+          <p className="font-display text-base text-[#FEF6DA]">
+            No one on the board yet
+          </p>
+        )}
+      </CardContent>
+    </Card>
   );
 }
