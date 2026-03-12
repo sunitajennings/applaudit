@@ -173,12 +173,7 @@ function LivePageContent({
   const isOverNominee =
     overIdStr != null && overIdStr.startsWith("nominee-");
 
-  const leaderLabel =
-    leaderNames.length === 0
-      ? null
-      : leaderNames.length === 1
-        ? `Current leader: ${leaderNames[0]}`
-        : `Current leaders: ${leaderNames.join(" & ")}`;
+  const hasLeader = leaderNames.length > 0;
 
   return (
     <div className="flex-1 overflow-y-auto flex flex-col">
@@ -188,10 +183,32 @@ function LivePageContent({
           currentCategoryIndex={currentCategoryIndex}
           onSelectCategoryIndex={setCurrentCategoryIndex}
         />
-        {leaderLabel && (
-          <p className="text-center text-sm text-muted-foreground pt-1 px-2">
-            {leaderLabel}
-          </p>
+        {hasLeader && (
+          <div className="flex items-center justify-center gap-2 pt-1 px-2 text-sm text-muted-foreground">
+            <img
+              src="/images/award.svg"
+              alt=""
+              className="h-5 w-auto shrink-0"
+              aria-hidden
+            />
+            <p className="text-center text-lg">
+              {leaderNames.length === 1 ? (
+                <>
+                  Current leader:{" "}
+                  <span className="font-bold text-foreground">
+                    {leaderNames[0]}
+                  </span>
+                </>
+              ) : (
+                <>
+                  Current leaders:{" "}
+                  <span className="font-bold text-foreground">
+                    {leaderNames.join(" & ")}
+                  </span>
+                </>
+              )}
+            </p>
+          </div>
         )}
       </div>
       {myBallots.length > 1 && (
