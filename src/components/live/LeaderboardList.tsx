@@ -11,8 +11,8 @@ export interface LeaderboardListProps {
 export function LeaderboardList({ rankedUsers }: LeaderboardListProps) {
   if (rankedUsers.length === 0) {
     return (
-      <section className="py-4" aria-label="Leaderboard list">
-        <p className="text-muted-foreground text-sm text-center">
+      <section className="px-4 pt-6 pb-4" aria-label="Leaderboard list">
+        <p className="font-display text-base text-muted-foreground text-center">
           No other players to show
         </p>
       </section>
@@ -20,16 +20,16 @@ export function LeaderboardList({ rankedUsers }: LeaderboardListProps) {
   }
 
   return (
-    <section className="py-4" aria-label="Leaderboard list">
-      <ul className="space-y-2">
+    <section className="pt-6 pb-4 w-3/4 mx-auto" aria-label="Leaderboard list">
+      <ul className="space-y-3">
         {rankedUsers.map(({ user, correctCount }) => (
           <li
             key={user.id}
-            className="flex items-center justify-between rounded-lg border border-border bg-card px-4 py-3"
+            className="flex items-center justify-between"
           >
-            <span className="font-medium">{user.name}</span>
-            <span className="text-muted-foreground text-sm">
-              {correctCount} correct
+            <span className="font-display font-medium text-base text-foreground">{user.name}</span>
+            <span className="font-display text-base text-muted-foreground">
+              {correctCount} pick{correctCount !== 1 ? "s" : ""}
             </span>
           </li>
         ))}

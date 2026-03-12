@@ -216,3 +216,18 @@
     transform: translateX(200%) skewX(-12deg);
   }
 }
+
+/* Slow shine: long pause then sweep, for periodic trophy highlight (e.g. every 5s) */
+@keyframes shine-slow {
+  0%,
+  80% {
+    transform: translateX(-100%) skewX(-12deg);
+  }
+  100% {
+    transform: translateX(200%) skewX(-12deg);
+  }
+}
+
+.animate-shine-slow {
+  animation: shine-slow 5s ease-in-out infinite;
+}
