@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getEventStartDate } from "@/data/oscar-2026";
 
@@ -23,6 +24,7 @@ function Divider() {
 }
 
 export function Countdown() {
+  const router = useRouter();
   const eventDate = getEventStartDate();
   const [now, setNow] = useState<number | null>(null);
 
@@ -52,11 +54,17 @@ export function Countdown() {
 
   if (hasStarted) {
     return (
-      <div className="text-center">
-        <p className="text-xl font-display font-bold text-primary">
-          Show time!
-        </p>
-        <p className="text-gold text-sm">The red carpet is on.</p>
+      <div className="space-y-2">
+        <button
+          type="button"
+          className="countdown-gradient flex w-full items-center justify-center rounded-full border border-gold/50 py-4 shadow-sm transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-gold/50 focus:ring-offset-2 focus:ring-offset-background"
+          aria-label="Start the Show"
+          onClick={() => router.push("/live")}
+        >
+          <span className="text-lg sm:text-xl font-display font-bold text-foreground">
+            Start the Show
+          </span>
+        </button>
       </div>
     );
   }

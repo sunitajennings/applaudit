@@ -28,15 +28,6 @@ export default function BallotPage() {
       <PageTransition className="max-w-md mx-auto w-full">
         <div className="space-y-6">
           <Countdown />
-
-          <Button
-            className="w-full rounded-full font-display font-bold"
-            size="lg"
-            onClick={() => router.push("/live")}
-          >
-            Let the Show Begin!
-          </Button>
-
           {user && (
             <BallotList userId={user.id} groupId={profile?.groupId ?? null} />
           )}
