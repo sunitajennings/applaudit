@@ -29,11 +29,11 @@ export function LiveBallotNav({
   };
 
   return (
-    <nav className="py-4 flex items-center justify-center" aria-label="Ballot switcher">
+    <nav className="py-4 mx-2 flex items-center justify-center" aria-label="Ballot switcher">
       <Tabs
         value={value}
         onValueChange={handleValueChange}
-        className="w-full "
+        className="w-full"
       >
         <TabsList
           className={cn(

@@ -124,7 +124,7 @@ function AvatarContent() {
           </div>
 
           {/* Avatar Picker */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <label className="text-md font-display font-medium">
               Select An Avatar
             </label>
@@ -135,7 +135,7 @@ function AvatarContent() {
               selectedAvatarId={selectedAvatarId}
               onSelect={setSelectedAvatarId}
             />
-          </div>
+          </div> */}
 
           {/* Continue Button */}
           <Button
