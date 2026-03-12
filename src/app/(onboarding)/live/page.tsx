@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import {
   DndContext,
@@ -131,6 +131,33 @@ function LivePageContent({
   leaderNames: string[];
 }) {
   const [overId, setOverId] = useState<string | number | null>(null);
+  const touchStartX = useRef<number | null>(null);
+  const SWIPE_THRESHOLD = 50;
+
+  const goPrev = useCallback(() => {
+    setCurrentCategoryIndex((i) => Math.max(0, i - 1));
+  }, [setCurrentCategoryIndex]);
+  const goNext = useCallback(() => {
+    setCurrentCategoryIndex((i) =>
+      Math.min(categoryList.length - 1, i + 1)
+    );
+  }, [setCurrentCategoryIndex, categoryList.length]);
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0]?.clientX ?? null;
+  }, []);
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent) => {
+      const start = touchStartX.current;
+      touchStartX.current = null;
+      if (start == null) return;
+      const end = e.changedTouches[0]?.clientX ?? start;
+      const delta = start - end;
+      if (delta > SWIPE_THRESHOLD) goNext();
+      else if (delta < -SWIPE_THRESHOLD) goPrev();
+    },
+    [goPrev, goNext]
+  );
 
   useDndMonitor({
     onDragOver: (event) => setOverId(event.over?.id ?? null),
@@ -166,9 +193,6 @@ function LivePageContent({
             {leaderLabel}
           </p>
         )}
-        <h2 className="text-center text-3xl font-display font-bold py-3">
-          {currentCategory?.name ?? "—"}
-        </h2>
       </div>
       {myBallots.length > 1 && (
         <LiveBallotNav
@@ -177,6 +201,48 @@ function LivePageContent({
           onSelectIndex={setCurrentBallotIndex}
         />
       )}
+      <section
+        className="shrink-0 py-3 flex flex-col gap-3"
+        aria-label="Category"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        <h2 className="text-center text-2xl font-display font-bold px-2">
+          {currentCategory?.name ?? "—"}
+        </h2>
+        <div className="flex items-center justify-between gap-2 px-2">
+          <button
+            type="button"
+            onClick={goPrev}
+            disabled={currentCategoryIndex <= 0}
+            className="shrink-0 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-40 disabled:pointer-events-none transition-colors"
+            aria-label="Previous category"
+          >
+            <span className="text-2xl">←</span>
+          </button>
+          <div className="flex items-center justify-center gap-1.5 flex-1 min-w-0">
+            {categoryList.map((_, idx) => (
+              <button
+                key={categoryList[idx]!.id}
+                type="button"
+                onClick={() => setCurrentCategoryIndex(idx)}
+                className={currentCategoryIndex === idx ? "w-2.5 h-2.5 rounded-full bg-foreground" : "w-2 h-2 rounded-full bg-muted-foreground/50 hover:bg-muted-foreground transition-colors"}
+                aria-label={`Category ${idx + 1} of ${categoryList.length}${currentCategoryIndex === idx ? ", current" : ""}`}
+                aria-current={currentCategoryIndex === idx ? "true" : undefined}
+              />
+            ))}
+          </div>
+          <button
+            type="button"
+            onClick={goNext}
+            disabled={currentCategoryIndex >= categoryList.length - 1}
+            className="shrink-0 p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-40 disabled:pointer-events-none transition-colors"
+            aria-label="Next category"
+          >
+            <span className="text-2xl">→</span>
+          </button>
+        </div>
+      </section>
       <div className="bg-live-card-bg px-4 py-2 pb-8 rounded-[24px]">
         <LiveStaging
           showAwardStatue={!declaredWinnerId}
