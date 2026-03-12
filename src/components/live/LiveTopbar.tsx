@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-import { ChevronLeft, Star, ChevronDown } from "lucide-react";
+import { ChevronLeft, Star, ChevronDown, SquareStack } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface CategoryOption {
@@ -24,6 +25,7 @@ export function LiveTopbar({
   currentCategoryIndex,
   onSelectCategoryIndex,
 }: LiveTopbarProps) {
+  const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -38,13 +40,14 @@ export function LiveTopbar({
       </Link>
 
       <div className="flex items-center gap-2">
-        <Link
-          href="/live/leaderboard"
-          className="flex items-center justify-center shrink-0 rounded-md border border-border bg-transparent p-2 text-foreground hover:bg-muted transition-colors"
+        <button
+          type="button"
+          onClick={() => router.push("/live/leaderboard")}
+          className="flex gap-1.5 items-center justify-center shrink-0 rounded-md border border-border bg-transparent px-3 py-2 text-foreground text-sm hover:bg-muted transition-colors"
           aria-label="Leaderboard"
         >
           <Star className="h-4 w-4" />
-        </Link>
+        </button>
         <div className="relative flex items-center" ref={dropdownRef}>
         {categories.length > 0 ? (
           <>
@@ -56,7 +59,7 @@ export function LiveTopbar({
               aria-haspopup="listbox"
               aria-expanded={dropdownOpen}
             >
-              <span>Categories</span>
+              <SquareStack className="h-4 w-4" />
               <ChevronDown
                 className={cn("h-4 w-4 transition-transform", dropdownOpen && "rotate-180")}
               />
