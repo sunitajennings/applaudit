@@ -1,5 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import type { Ballot, BallotChoice } from "@/lib/ballot/types";
+import type { BallotSummary } from "@/lib/live/types";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function toBallot(row: any): Ballot {
@@ -130,4 +131,56 @@ export async function upsertBallotChoices(
     .upsert(rows, { onConflict: "ballot_id,category_id" });
 
   if (error) throw error;
+}
+
+export async function getBallotsByAwardShow(
+  supabase: SupabaseClient,
+  awardShowId: string,
+): Promise<Ballot[]> {
+  const { data, error } = await supabase
+    .from("ballots")
+    .select("*")
+    .eq("award_show_id", awardShowId)
+    .order("updated_at", { ascending: false });
+
+  if (error) throw error;
+  return (data ?? []).map(toBallot);
+}
+
+export async function getBallotSummariesByAwardShow(
+  supabase: SupabaseClient,
+  awardShowId: string,
+): Promise<BallotSummary[]> {
+  const ballots = await getBallotsByAwardShow(supabase, awardShowId);
+  if (ballots.length === 0) return [];
+
+  const userIds = [...new Set(ballots.map((b) => b.userId))];
+  const { data: profiles } = await supabase
+    .from("profiles")
+    .select("id, nickname")
+    .in("id", userIds);
+
+  const nicknameById = new Map(
+    (profiles ?? []).map((p) => [p.id, p.nickname ?? ""])
+  );
+
+  return ballots.map((b) => ({
+    id: b.id,
+    userId: b.userId,
+    name: b.name,
+    userNickname: nicknameById.get(b.userId) ?? "",
+  }));
+}
+
+export async function getChoicesForBallots(
+  supabase: SupabaseClient,
+  ballotIds: string[],
+): Promise<BallotChoice[]> {
+  if (ballotIds.length === 0) return [];
+  const { data, error } = await supabase
+    .from("ballot_choices")
+    .select("*")
+    .in("ballot_id", ballotIds);
+  if (error) throw error;
+  return (data ?? []).map(toChoice);
 }

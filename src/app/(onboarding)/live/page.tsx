@@ -31,15 +31,10 @@ import {
   categories,
   getNomineesForCategory,
 } from "@/data/oscar-2026";
-import {
-  getDeclaredWinners,
-  setDeclaredWinner,
-  clearDeclaredWinner,
-  getCorrectGuessCount,
-} from "@/lib/live/storage";
+import { getCorrectGuessCount } from "@/lib/live/storage";
 import type { BallotSummary, UserSummary } from "@/lib/live/types";
 import type { BallotChoice } from "@/lib/ballot/types";
-import { MOCK_BALLOTS, MOCK_CHOICES, MOCK_USERS, CURRENT_USER_ID } from "./mock-data";
+import { useLiveData } from "@/lib/live/useLiveData";
 
 /** User is in the lead if their best ballot has the most correct guesses. */
 function getLeaderUserIds(
@@ -297,9 +292,8 @@ function LiveEmptyState() {
 }
 
 export default function LivePage() {
-  const [declaredWinners, setDeclaredWinners] = useState<Record<string, string>>(
-    () => ({})
-  );
+  const { allBallots, allChoices, allUsers, myBallots, isDataLoading, isSessionLoading, user, declaredWinners, setWinner, clearWinner } = useLiveData(AWARD_SHOW_ID);
+
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [currentBallotIndex, setCurrentBallotIndex] = useState(0);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
@@ -308,7 +302,6 @@ export default function LivePage() {
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
 
   useEffect(() => {
-    setDeclaredWinners(getDeclaredWinners(AWARD_SHOW_ID));
     setMounted(true);
   }, []);
 
@@ -343,40 +336,24 @@ export default function LivePage() {
     const overIdStr = String(over.id);
     if (overIdStr.startsWith("nominee-")) {
       const nomineeId = overIdStr.slice("nominee-".length);
-      setDeclaredWinner(AWARD_SHOW_ID, currentCategory.id, nomineeId);
-      setDeclaredWinners((prev) => ({ ...prev, [currentCategory.id]: nomineeId }));
+      setWinner(currentCategory.id, nomineeId);
       const nominee = nominees.find((n) => n.id === nomineeId);
       announceWinner(nominee?.name ?? "Winner");
     } else if (overIdStr === STAGING_DROPPABLE_ID) {
-      clearDeclaredWinner(AWARD_SHOW_ID, currentCategory.id);
-      setDeclaredWinners((prev) => {
-        const next = { ...prev };
-        delete next[currentCategory.id];
-        return next;
-      });
+      clearWinner(currentCategory.id);
     }
   };
 
   const handleSelectWinner = (nomineeId: string) => {
     if (!currentCategory) return;
     const nominee = nominees.find((n) => n.id === nomineeId);
-    setDeclaredWinner(AWARD_SHOW_ID, currentCategory.id, nomineeId);
-    setDeclaredWinners((prev) => ({ ...prev, [currentCategory.id]: nomineeId }));
+    setWinner(currentCategory.id, nomineeId);
     announceWinner(nominee?.name ?? "Winner");
   };
 
-  /** All ballots (all users) for leader calculation and topbar. */
-  const allBallots = MOCK_BALLOTS;
-
-  /** Current user's ballots only — only these appear in the bottom ballot nav. */
-  const myBallots = useMemo(
-    () => allBallots.filter((b) => b.userId === CURRENT_USER_ID),
-    [allBallots]
-  );
-
   const leaderUserIds = useMemo(
-    () => getLeaderUserIds(MOCK_USERS, allBallots, MOCK_CHOICES, declaredWinners),
-    [allBallots, declaredWinners]
+    () => getLeaderUserIds(allUsers, allBallots, allChoices, declaredWinners),
+    [allUsers, allBallots, allChoices, declaredWinners]
   );
 
   const ballotsWhoPickedNominee = useMemo(
@@ -385,23 +362,33 @@ export default function LivePage() {
         ? getBallotsWhoPickedNominee(
             currentCategory.id,
             allBallots,
-            MOCK_CHOICES
+            allChoices
           )
         : {},
-    [currentCategory, allBallots]
+    [currentCategory, allBallots, allChoices]
   );
 
   /** Current (my) ballot's choice for current category (for "Your pick" highlight). */
   const selectedBallotNomineeId = useMemo(() => {
     const ballot = myBallots[currentBallotIndex];
     if (!ballot || !currentCategory) return null;
-    const choice = MOCK_CHOICES.find(
+    const choice = allChoices.find(
       (c) => c.ballotId === ballot.id && c.categoryId === currentCategory.id
     );
     return choice?.nomineeId ?? null;
-  }, [myBallots, currentBallotIndex, currentCategory]);
+  }, [myBallots, currentBallotIndex, currentCategory, allChoices]);
 
   if (!mounted) {
+    return (
+      <AppShell variant="dark" showLogo={true} showAvatar={false}>
+        <div className="max-w-md mx-auto w-full flex flex-col min-h-0">
+          <div className="flex-1 overflow-y-auto flex flex-col" />
+        </div>
+      </AppShell>
+    );
+  }
+
+  if (isSessionLoading || isDataLoading) {
     return (
       <AppShell variant="dark" showLogo={true} showAvatar={false}>
         <div className="max-w-md mx-auto w-full flex flex-col min-h-0">
@@ -450,7 +437,7 @@ export default function LivePage() {
           </DragOverlay>
           <LivePageContent
             myBallots={myBallots}
-            users={MOCK_USERS}
+            users={allUsers}
             categories={categories.map((c) => ({ id: c.id, name: c.name }))}
             currentCategoryIndex={currentCategoryIndex}
             setCurrentCategoryIndex={setCurrentCategoryIndex}
@@ -462,7 +449,7 @@ export default function LivePage() {
             declaredWinnerId={declaredWinnerId}
             selectedBallotNomineeId={selectedBallotNomineeId}
             onSelectWinner={handleSelectWinner}
-            leaderNames={MOCK_USERS.filter((u) => leaderUserIds.includes(u.id)).map((u) => u.name)}
+            leaderNames={allUsers.filter((u) => leaderUserIds.includes(u.id)).map((u) => u.name)}
           />
         </DndContext>
       </div>

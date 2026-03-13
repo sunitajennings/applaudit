@@ -6,14 +6,11 @@ import { ArrowRight, ChevronLeft } from "lucide-react";
 import { AppShell } from "@/components/layout/AppShell";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { Button } from "@/components/ui/button";
-import {
-  getDeclaredWinners,
-  getCorrectGuessCount,
-} from "@/lib/live/storage";
+import { getCorrectGuessCount } from "@/lib/live/storage";
 import type { UserSummary, BallotSummary, LeaderboardUserRow } from "@/lib/live/types";
 import type { BallotChoice } from "@/lib/ballot/types";
 import { AWARD_SHOW_ID } from "@/data/oscar-2026";
-import { MOCK_USERS, MOCK_BALLOTS, MOCK_CHOICES } from "../mock-data";
+import { useLiveData } from "@/lib/live/useLiveData";
 import { LeaderboardHero } from "@/components/live/LeaderboardHero";
 import { LeaderboardList } from "@/components/live/LeaderboardList";
 
@@ -57,19 +54,16 @@ function getLeaders(ranked: LeaderboardUserRow[]): LeaderboardUserRow[] {
 }
 
 export default function LeaderboardPage() {
-  const [declaredWinners, setDeclaredWinners] = useState<Record<string, string>>(
-    () => ({})
-  );
   const [mounted, setMounted] = useState(false);
+  const { allBallots, allChoices, allUsers, isDataLoading, isSessionLoading, declaredWinners } = useLiveData(AWARD_SHOW_ID);
 
   useEffect(() => {
-    setDeclaredWinners(getDeclaredWinners(AWARD_SHOW_ID));
     setMounted(true);
   }, []);
 
   const rankedUsers = useMemo(
-    () => getRankedUsers(MOCK_USERS, MOCK_BALLOTS, MOCK_CHOICES, declaredWinners),
-    [declaredWinners]
+    () => getRankedUsers(allUsers, allBallots, allChoices, declaredWinners),
+    [allUsers, allBallots, allChoices, declaredWinners]
   );
   const leaders = useMemo(() => getLeaders(rankedUsers), [rankedUsers]);
   const nonLeaderRanked = useMemo(
@@ -84,6 +78,16 @@ export default function LeaderboardPage() {
           <div className="flex flex-col min-h-0 flex-1">
             <div className="flex-1" />
           </div>
+        </PageTransition>
+      </AppShell>
+    );
+  }
+
+  if (isSessionLoading || isDataLoading) {
+    return (
+      <AppShell variant="light" showLogo={true} showAvatar={false}>
+        <PageTransition className="max-w-md mx-auto w-full">
+          <div className="flex flex-col min-h-0 flex-1"><div className="flex-1" /></div>
         </PageTransition>
       </AppShell>
     );
