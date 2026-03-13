@@ -7,7 +7,7 @@
 
 # Profile
 1. (ready) Select nickname. It's still there on return.
-1. Select avatar. It's still there on return.
+1. (future) Select avatar. It's still there on return.
 
 # Pre-show
 1. (ready) Create a ballot. (CRU)
@@ -16,6 +16,8 @@
   - 
 
 # Showtime
-1. (wip) Live mode should reflect the real state of users & their ballots.
-1. Live mode should be toggle-able by sunita and colleen but no one else.
-1.
+1. (ready) Live mode should reflect the real state of users & their ballots.
+1. (ready) Live mode is based on showtime!
+1. (ready) When a winner is declared, all users see the category in "awarded" state.
+1. (ready) Leaderboard should reflect current points for all awarded categories.
+1. (ready) Leaderboard works for multi ballot scenarios, too
