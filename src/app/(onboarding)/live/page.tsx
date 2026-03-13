@@ -31,17 +31,10 @@ import {
   categories,
   getNomineesForCategory,
 } from "@/data/oscar-2026";
-import {
-  getDeclaredWinners,
-  setDeclaredWinner,
-  clearDeclaredWinner,
-  getCorrectGuessCount,
-} from "@/lib/live/storage";
+import { getCorrectGuessCount } from "@/lib/live/storage";
 import type { BallotSummary, UserSummary } from "@/lib/live/types";
 import type { BallotChoice } from "@/lib/ballot/types";
-import { useSession } from "@/lib/store/session";
-import { createClient } from "@/lib/supabase/client";
-import { getBallotSummariesByAwardShow, getChoicesForBallots } from "@/lib/queries/ballots";
+import { useLiveData } from "@/lib/live/useLiveData";
 
 /** User is in the lead if their best ballot has the most correct guesses. */
 function getLeaderUserIds(
@@ -299,16 +292,8 @@ function LiveEmptyState() {
 }
 
 export default function LivePage() {
-  const { user, profile, isLoading } = useSession();
-  const [supabase] = useState(() => createClient());
+  const { allBallots, allChoices, allUsers, myBallots, isDataLoading, isSessionLoading, user, declaredWinners, setWinner, clearWinner } = useLiveData(AWARD_SHOW_ID);
 
-  const [allBallots, setAllBallots] = useState<BallotSummary[]>([]);
-  const [allChoices, setAllChoices] = useState<BallotChoice[]>([]);
-  const [isDataLoading, setIsDataLoading] = useState(true);
-
-  const [declaredWinners, setDeclaredWinners] = useState<Record<string, string>>(
-    () => ({})
-  );
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [currentBallotIndex, setCurrentBallotIndex] = useState(0);
   const [confettiTrigger, setConfettiTrigger] = useState(0);
@@ -317,47 +302,8 @@ export default function LivePage() {
   const [activeDragId, setActiveDragId] = useState<string | null>(null);
 
   useEffect(() => {
-    setDeclaredWinners(getDeclaredWinners(AWARD_SHOW_ID));
     setMounted(true);
   }, []);
-
-  useEffect(() => {
-    if (!user || isLoading) return;
-    getBallotSummariesByAwardShow(supabase, AWARD_SHOW_ID)
-      .then(setAllBallots)
-      .catch(console.error);
-  }, [user?.id, isLoading, supabase]);
-
-  useEffect(() => {
-    if (allBallots.length === 0) return;
-    const ballotIds = allBallots.map((b) => b.id);
-    getChoicesForBallots(supabase, ballotIds)
-      .then(setAllChoices)
-      .catch(console.error)
-      .finally(() => setIsDataLoading(false));
-  }, [allBallots, supabase]);
-
-  // Patch the current user's userNickname from the session profile, since the
-  // DB profile.nickname may be null if set only after onboarding.
-  const patchedAllBallots = useMemo(() => {
-    const nickname = profile?.nickname;
-    if (!user || !nickname) return allBallots;
-    return allBallots.map((b) =>
-      b.userId === user.id ? { ...b, userNickname: nickname } : b
-    );
-  }, [allBallots, user, profile?.nickname]);
-
-  const myBallots = useMemo(
-    () => patchedAllBallots.filter((b) => b.userId === user?.id),
-    [patchedAllBallots, user?.id]
-  );
-
-  const allUsers: UserSummary[] = useMemo(() => {
-    const seen = new Set<string>();
-    return patchedAllBallots
-      .filter((b) => { if (seen.has(b.userId)) return false; seen.add(b.userId); return true; })
-      .map((b) => ({ id: b.userId, name: b.userNickname }));
-  }, [patchedAllBallots]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -390,31 +336,24 @@ export default function LivePage() {
     const overIdStr = String(over.id);
     if (overIdStr.startsWith("nominee-")) {
       const nomineeId = overIdStr.slice("nominee-".length);
-      setDeclaredWinner(AWARD_SHOW_ID, currentCategory.id, nomineeId);
-      setDeclaredWinners((prev) => ({ ...prev, [currentCategory.id]: nomineeId }));
+      setWinner(currentCategory.id, nomineeId);
       const nominee = nominees.find((n) => n.id === nomineeId);
       announceWinner(nominee?.name ?? "Winner");
     } else if (overIdStr === STAGING_DROPPABLE_ID) {
-      clearDeclaredWinner(AWARD_SHOW_ID, currentCategory.id);
-      setDeclaredWinners((prev) => {
-        const next = { ...prev };
-        delete next[currentCategory.id];
-        return next;
-      });
+      clearWinner(currentCategory.id);
     }
   };
 
   const handleSelectWinner = (nomineeId: string) => {
     if (!currentCategory) return;
     const nominee = nominees.find((n) => n.id === nomineeId);
-    setDeclaredWinner(AWARD_SHOW_ID, currentCategory.id, nomineeId);
-    setDeclaredWinners((prev) => ({ ...prev, [currentCategory.id]: nomineeId }));
+    setWinner(currentCategory.id, nomineeId);
     announceWinner(nominee?.name ?? "Winner");
   };
 
   const leaderUserIds = useMemo(
-    () => getLeaderUserIds(allUsers, patchedAllBallots, allChoices, declaredWinners),
-    [allUsers, patchedAllBallots, allChoices, declaredWinners]
+    () => getLeaderUserIds(allUsers, allBallots, allChoices, declaredWinners),
+    [allUsers, allBallots, allChoices, declaredWinners]
   );
 
   const ballotsWhoPickedNominee = useMemo(
@@ -422,11 +361,11 @@ export default function LivePage() {
       currentCategory
         ? getBallotsWhoPickedNominee(
             currentCategory.id,
-            patchedAllBallots,
+            allBallots,
             allChoices
           )
         : {},
-    [currentCategory, patchedAllBallots, allChoices]
+    [currentCategory, allBallots, allChoices]
   );
 
   /** Current (my) ballot's choice for current category (for "Your pick" highlight). */
@@ -449,7 +388,7 @@ export default function LivePage() {
     );
   }
 
-  if (isLoading || isDataLoading) {
+  if (isSessionLoading || isDataLoading) {
     return (
       <AppShell variant="dark" showLogo={true} showAvatar={false}>
         <div className="max-w-md mx-auto w-full flex flex-col min-h-0">
