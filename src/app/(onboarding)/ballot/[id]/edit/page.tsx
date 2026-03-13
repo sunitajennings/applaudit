@@ -10,10 +10,11 @@ import { AppShell } from "@/components/layout/AppShell";
 import { useSession } from "@/lib/store/session";
 import { useNavCenter } from "@/lib/store/nav-center";
 import { getBallotById, getChoicesForBallot, updateBallotName } from "@/lib/queries/ballots";
+import { getCategoriesByAwardShow, getNomineesByAwardShow } from "@/lib/queries/categories";
 import { createClient } from "@/lib/supabase/client";
 import { BallotVoting } from "@/components/ballot/BallotVoting";
-import { isEventStarted } from "@/data/oscar-2026";
-import type { Ballot, BallotChoice } from "@/lib/ballot/types";
+import { AWARD_SHOW_ID, isEventStarted } from "@/data/oscar-2026";
+import type { Ballot, BallotChoice, Category, Nominee } from "@/lib/ballot/types";
 
 export default function EditBallotPage() {
   const router = useRouter();
@@ -25,6 +26,8 @@ export default function EditBallotPage() {
 
   const [ballot, setBallot] = useState<Ballot | null>(null);
   const [choices, setChoices] = useState<BallotChoice[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [nominees, setNominees] = useState<Nominee[]>([]);
   const [isEditingName, setIsEditingName] = useState(false);
 
   useEffect(() => {
@@ -46,9 +49,15 @@ export default function EditBallotPage() {
           router.push("/ballot");
           return;
         }
-        const fetchedChoices = await getChoicesForBallot(supabase, found.id);
+        const [fetchedChoices, fetchedCategories, fetchedNominees] = await Promise.all([
+          getChoicesForBallot(supabase, found.id),
+          getCategoriesByAwardShow(supabase, AWARD_SHOW_ID),
+          getNomineesByAwardShow(supabase, AWARD_SHOW_ID),
+        ]);
         setBallot(found);
         setChoices(fetchedChoices);
+        setCategories(fetchedCategories);
+        setNominees(fetchedNominees);
       })
       .catch(() => router.push("/ballot"));
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -137,6 +146,8 @@ export default function EditBallotPage() {
         <BallotVoting
           ballot={ballot}
           initialChoices={choices}
+          categories={categories}
+          nominees={nominees}
           onSave={handleSave}
         />
       </PageTransition>

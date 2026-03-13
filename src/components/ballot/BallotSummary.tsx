@@ -2,19 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { categories, getNomineeById } from "@/data/oscar-2026";
 import { cn } from "@/lib/utils";
-import type { Ballot } from "@/lib/ballot/types";
+import type { Ballot, Category, Nominee } from "@/lib/ballot/types";
 
 interface BallotSummaryProps {
   ballot: Ballot;
   choices: Record<string, string>;
+  categories: Category[];
+  nominees: Nominee[];
   onEdit: () => void;
   onEditCategory?: (categoryId: string) => void;
   onSave: () => void;
 }
 
-export function BallotSummary({ ballot, choices, onEdit, onEditCategory, onSave }: BallotSummaryProps) {
+export function BallotSummary({ ballot, choices, categories, nominees, onEdit, onEditCategory, onSave }: BallotSummaryProps) {
   return (
     <div className="space-y-6">
       <div>
@@ -28,7 +29,7 @@ export function BallotSummary({ ballot, choices, onEdit, onEditCategory, onSave 
         <ul className="space-y-4">
           {categories.map((category) => {
             const nomineeId = choices[category.id];
-            const nominee = nomineeId ? getNomineeById(nomineeId) : null;
+            const nominee = nomineeId ? nominees.find((n) => n.id === nomineeId) : null;
             const handleClick = onEditCategory
               ? () => onEditCategory(category.id)
               : undefined;
