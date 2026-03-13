@@ -1,6 +1,6 @@
 import type { AwardShow, Category, Nominee } from "@/lib/ballot/types";
 
-const DEFAULT_EVENT_ISO = "2026-03-15T01:00:00.000Z";
+const DEFAULT_EVENT_ISO = "2026-03-16T00:00:00.000Z"; // show starts Sun, Mar 15, 2026, 5:00 PM MST
 
 function getEventStartIso(): string {
   return process.env.NEXT_PUBLIC_EVENT_START_ISO ?? DEFAULT_EVENT_ISO;
@@ -270,8 +270,11 @@ const categoriesData: {
     name: "Documentary Short Film",
     nominees: [
       { name: "All the Empty Rooms", movie: "" },
-      { name: "Armed Only With a Camera: The Life and Death of Brent Renaud", movie: "" },
-      { name: "Children No More: \"Were and Are Gone\"", movie: "" },
+      {
+        name: "Armed Only With a Camera: The Life and Death of Brent Renaud",
+        movie: "",
+      },
+      { name: 'Children No More: "Were and Are Gone"', movie: "" },
       { name: "The Devil Is Busy", movie: "" },
       { name: "Perfectly a Strangeness", movie: "" },
     ],
