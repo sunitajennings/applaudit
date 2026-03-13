@@ -17,6 +17,7 @@ export interface BallotSummary {
   id: string;
   userId: string;
   name: string;
+  userNickname: string;  // for displaying initials; empty string if not set
 }
 
 /** Row for leaderboard: user + their best correct-guess count (max across their ballots). */

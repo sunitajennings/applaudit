@@ -168,7 +168,8 @@ function NomineeCard({
           >
             {ballots.slice(0, 4).map((ballot) => {
               const user = userMap.get(ballot.userId);
-              const initials = user ? initialsFromUserName(user.name) : initialsFromUserName(ballot.name);
+              const name = user?.name || ballot.userNickname;
+              const initials = name ? initialsFromUserName(name) : "?";
               return (
                 <Avatar
                   key={ballot.id}
