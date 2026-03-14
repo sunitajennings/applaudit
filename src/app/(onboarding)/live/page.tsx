@@ -26,14 +26,10 @@ import {
   AwardStatueDragPreview,
 } from "@/components/live/AwardStatueDraggable";
 import { STAGING_DROPPABLE_ID } from "@/components/live/LiveStaging";
-import {
-  AWARD_SHOW_ID,
-  categories,
-  getNomineesForCategory,
-} from "@/data/oscar-2026";
+import { AWARD_SHOW_ID } from "@/data/oscar-2026";
 import { getCorrectGuessCount } from "@/lib/live/storage";
 import type { BallotSummary, UserSummary } from "@/lib/live/types";
-import type { BallotChoice } from "@/lib/ballot/types";
+import type { BallotChoice, Nominee } from "@/lib/ballot/types";
 import { useLiveData } from "@/lib/live/useLiveData";
 
 /** User is in the lead if their best ballot has the most correct guesses. */
@@ -117,8 +113,8 @@ function LivePageContent({
   currentBallotIndex: number;
   setCurrentBallotIndex: React.Dispatch<React.SetStateAction<number>>;
   ballotsWhoPickedNominee: Record<string, BallotSummary[]>;
-  currentCategory: (typeof categories)[number] | undefined;
-  nominees: ReturnType<typeof getNomineesForCategory>;
+  currentCategory: { id: string; name: string } | undefined;
+  nominees: Nominee[];
   declaredWinnerId: string | undefined;
   selectedBallotNomineeId: string | null;
   onSelectWinner: (nomineeId: string) => void;
@@ -292,7 +288,7 @@ function LiveEmptyState() {
 }
 
 export default function LivePage() {
-  const { allBallots, allChoices, allUsers, myBallots, isDataLoading, isSessionLoading, user, declaredWinners, setWinner, clearWinner } = useLiveData(AWARD_SHOW_ID);
+  const { allBallots, allChoices, allUsers, myBallots, categories, getNomineesForCategory, isDataLoading, isSessionLoading, user, declaredWinners, setWinner, clearWinner } = useLiveData(AWARD_SHOW_ID);
 
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [currentBallotIndex, setCurrentBallotIndex] = useState(0);

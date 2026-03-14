@@ -7,19 +7,20 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { CategoryCard } from "@/components/ballot/CategoryCard";
 import { BallotSummary } from "@/components/ballot/BallotSummary";
-import { categories, getNomineesForCategory } from "@/data/oscar-2026";
 import { deleteChoiceForCategory, upsertBallotChoices } from "@/lib/queries/ballots";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import type { Ballot, BallotChoice } from "@/lib/ballot/types";
+import type { Ballot, BallotChoice, Category, Nominee } from "@/lib/ballot/types";
 
 interface BallotVotingProps {
   ballot: Ballot;
   initialChoices: BallotChoice[];
+  categories: Category[];
+  nominees: Nominee[];
   onSave: () => void;
 }
 
-export function BallotVoting({ ballot, initialChoices, onSave }: BallotVotingProps) {
+export function BallotVoting({ ballot, initialChoices, categories, nominees, onSave }: BallotVotingProps) {
   const supabase = createClient();
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollToIndexRef = useRef<number | null>(null);
@@ -131,6 +132,8 @@ export function BallotVoting({ ballot, initialChoices, onSave }: BallotVotingPro
       <BallotSummary
         ballot={ballot}
         choices={choices}
+        categories={categories}
+        nominees={nominees}
         onEdit={() => setView("cards")}
         onEditCategory={handleEditCategory}
         onSave={onSave}
@@ -207,7 +210,7 @@ export function BallotVoting({ ballot, initialChoices, onSave }: BallotVotingPro
               <div className="w-full max-w-md flex flex-col min-h-0">
                 <CategoryCard
                   category={category}
-                  nominees={getNomineesForCategory(category.id)}
+                  nominees={nominees.filter((n) => n.categoryId === category.id)}
                   selectedNomineeId={choices[category.id] ?? null}
                   onSelect={(nomineeId) => handleSelect(category.id, nomineeId)}
                 />

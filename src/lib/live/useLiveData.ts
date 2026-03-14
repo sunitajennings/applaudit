@@ -2,9 +2,10 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useSession } from "@/lib/store/session";
 import { getBallotSummariesByAwardShow, getChoicesForBallots } from "@/lib/queries/ballots";
+import { getCategoriesByAwardShow, getNomineesByAwardShow } from "@/lib/queries/categories";
 import { fetchDeclaredWinners, upsertDeclaredWinner, deleteDeclaredWinner } from "@/lib/queries/winners";
 import type { BallotSummary, DeclaredWinners, UserSummary } from "@/lib/live/types";
-import type { BallotChoice } from "@/lib/ballot/types";
+import type { BallotChoice, Category, Nominee } from "@/lib/ballot/types";
 
 export function useLiveData(awardShowId: string) {
   const { user, profile, isLoading } = useSession();
@@ -12,7 +13,23 @@ export function useLiveData(awardShowId: string) {
   const [allBallots, setAllBallots] = useState<BallotSummary[]>([]);
   const [allChoices, setAllChoices] = useState<BallotChoice[]>([]);
   const [isDataLoading, setIsDataLoading] = useState(true);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [nominees, setNominees] = useState<Nominee[]>([]);
   const [declaredWinners, setDeclaredWinners] = useState<DeclaredWinners>({});
+
+  useEffect(() => {
+    Promise.all([
+      getCategoriesByAwardShow(supabase, awardShowId),
+      getNomineesByAwardShow(supabase, awardShowId),
+    ])
+      .then(([cats, noms]) => {
+        setCategories(cats);
+        setNominees(noms);
+      })
+      .catch(console.error)
+      .finally(() => setIsCategoriesLoading(false));
+  }, [supabase, awardShowId]);
 
   useEffect(() => {
     if (!user || isLoading) return;
@@ -108,12 +125,20 @@ export function useLiveData(awardShowId: string) {
     [allBallotPatched, user?.id]
   );
 
+  const getNomineesForCategory = useCallback(
+    (categoryId: string) => nominees.filter((n) => n.categoryId === categoryId),
+    [nominees]
+  );
+
   return {
     allBallots: allBallotPatched,
     allChoices,
     allUsers,
     myBallots,
-    isDataLoading,
+    categories,
+    nominees,
+    getNomineesForCategory,
+    isDataLoading: isDataLoading || isCategoriesLoading,
     isSessionLoading: isLoading,
     user,
     declaredWinners,
