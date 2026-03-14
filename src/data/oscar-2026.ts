@@ -1,6 +1,6 @@
 import type { AwardShow, Category, Nominee } from "@/lib/ballot/types";
 
-const DEFAULT_EVENT_ISO = "2026-03-15T01:00:00.000Z";
+const DEFAULT_EVENT_ISO = "2026-03-16T00:00:00.000Z"; // show starts Sun, Mar 15, 2026, 5:00 PM MST
 
 function getEventStartIso(): string {
   return process.env.NEXT_PUBLIC_EVENT_START_ISO ?? DEFAULT_EVENT_ISO;
@@ -99,11 +99,11 @@ const categoriesData: {
   {
     name: "Best Casting",
     nominees: [
-      { name: "Hamnet", movie: "" },
-      { name: "Marty Supreme", movie: "" },
-      { name: "One Battle After Another", movie: "" },
-      { name: "The Secret Agent", movie: "" },
-      { name: "Sinners", movie: "" },
+      { name: "Nina Gold", movie: "Hamnet" },
+      { name: "Jennifer Venditti", movie: "Marty Supreme" },
+      { name: "Cassandra Kulukundis", movie: "One Battle After Another" },
+      { name: "Gabriel Domingues", movie: "The Secret Agent" },
+      { name: "Francine Maisler", movie: "Sinners" },
     ],
   },
   {
@@ -159,22 +159,21 @@ const categoriesData: {
   {
     name: "Music (Original Score)",
     nominees: [
-      { name: "Bugonia", movie: "" },
-      { name: "Frankenstein", movie: "" },
-      { name: "Hamnet", movie: "" },
-      { name: "One Battle After Another", movie: "" },
-      { name: "Sinners", movie: "" },
+      { name: "Jerskin Fendrix", movie: "Bugonia" },
+      { name: "Alexandre Desplat", movie: "Frankenstein" },
+      { name: "Max Richter", movie: "Hamnet" },
+      { name: "Jonny Greenwood", movie: "One Battle After Another" },
+      { name: "Ludwig Göransson", movie: "Sinners" },
     ],
   },
   {
     name: "Music (Original Song)",
     nominees: [
-      { name: '"Dear Me,"', movie: "Diane Warren: Relentless" },
-      { name: '"Golden,"', movie: "KPop Demon Hunters" },
-      { name: '"Highest 2 Lowest,"', movie: "Highest 2 Lowest" },
-      { name: '"I Lied To You,"', movie: "Sinners" },
-      { name: '"Sweet Dreams of Joy,"', movie: "Viva Verdi!" },
-      { name: '"Train Dreams,"', movie: "Train Dreams" },
+      { name: '"Dear Me"', movie: "Diane Warren: Relentless" },
+      { name: '"Golden"', movie: "KPop Demon Hunters" },
+      { name: '"I Lied to You"', movie: "Sinners" },
+      { name: '"Sweet Dreams of Joy"', movie: "Viva Verdi!" },
+      { name: '"Train Dreams"', movie: "Train Dreams" },
     ],
   },
   {
@@ -200,21 +199,84 @@ const categoriesData: {
   {
     name: "Costume Design",
     nominees: [
-      { name: "Avatar: Fire and Ash", movie: "" },
-      { name: "Frankenstein", movie: "" },
-      { name: "Hamnet", movie: "" },
-      { name: "Marty Supreme", movie: "" },
-      { name: "Sinners", movie: "" },
+      { name: "Deborah L. Scott", movie: "Avatar: Fire and Ash" },
+      { name: "Kate Hawley", movie: "Frankenstein" },
+      { name: "Malgosia Turzanska", movie: "Hamnet" },
+      { name: "Miyako Bellizzi", movie: "Marty Supreme" },
+      { name: "Ruth E. Carter", movie: "Sinners" },
     ],
   },
   {
     name: "Cinematography",
     nominees: [
+      { name: "Dan Laustsen", movie: "Frankenstein" },
+      { name: "Darius Khondji", movie: "Marty Supreme" },
+      { name: "Michael Bauman", movie: "One Battle After Another" },
+      { name: "Autumn Durald Arkapaw", movie: "Sinners" },
+      { name: "Adolpho Veloso", movie: "Train Dreams" },
+    ],
+  },
+  {
+    name: "Film Editing",
+    nominees: [
+      { name: "Stephen Mirrione", movie: "F1" },
+      { name: "Ronald Bronstein & Josh Safdie", movie: "Marty Supreme" },
+      { name: "Andy Jurgensen", movie: "One Battle After Another" },
+      { name: "Olivier Bugge Coutté", movie: "Sentimental Value" },
+      { name: "Michael P. Shawver", movie: "Sinners" },
+    ],
+  },
+  {
+    name: "Production Design",
+    nominees: [
       { name: "Frankenstein", movie: "" },
+      { name: "Hamnet", movie: "" },
       { name: "Marty Supreme", movie: "" },
       { name: "One Battle After Another", movie: "" },
-      { name: "Sentimental Value", movie: "" },
       { name: "Sinners", movie: "" },
+    ],
+  },
+  {
+    name: "Visual Effects",
+    nominees: [
+      { name: "Avatar: Fire and Ash", movie: "" },
+      { name: "F1", movie: "" },
+      { name: "Jurassic World Rebirth", movie: "" },
+      { name: "The Lost Bus", movie: "" },
+      { name: "Sinners", movie: "" },
+    ],
+  },
+  {
+    name: "Live Action Short Film",
+    nominees: [
+      { name: "Butcher's Stain", movie: "" },
+      { name: "A Friend of Dorothy", movie: "" },
+      { name: "Jane Austen's Period Drama", movie: "" },
+      { name: "The Singers", movie: "" },
+      { name: "Two People Exchanging Saliva", movie: "" },
+    ],
+  },
+  {
+    name: "Animated Short Film",
+    nominees: [
+      { name: "Butterfly", movie: "" },
+      { name: "Forevergreen", movie: "" },
+      { name: "The Girl Who Cried Pearls", movie: "" },
+      { name: "Retirement Plan", movie: "" },
+      { name: "The Three Sisters", movie: "" },
+    ],
+  },
+  {
+    name: "Documentary Short Film",
+    nominees: [
+      { name: "All the Empty Rooms", movie: "" },
+      {
+        name: "Armed Only With a Camera: The Life and Death of Brent Renaud",
+        movie: "",
+      },
+      { name: 'Children No More: "Were and Are Gone"', movie: "" },
+      { name: "The Devil Is Busy", movie: "" },
+      { name: "Perfectly a Strangeness", movie: "" },
     ],
   },
 ];
