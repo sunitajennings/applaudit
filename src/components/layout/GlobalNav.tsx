@@ -91,13 +91,13 @@ export function GlobalNav({ className }: GlobalNavProps) {
 
           {/* Right side: avatar when logged in (and not on public home), login link when not */}
           {useConstrainedWidth ? (
-            <div className="flex items-center shrink-0">
+            <Link href="/profile/me" className="flex items-center shrink-0" aria-label="Profile">
               <Avatar
                 initials={avatarInitials}
                 size="sm"
                 className="shrink-0 bg-primary text-primary-foreground"
               />
-            </div>
+            </Link>
           ) : !isLoading ? (
             <Button asChild variant="outline" size="sm">
               <Link href="/login">Login</Link>

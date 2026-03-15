@@ -46,6 +46,39 @@ export async function fetchOrCreateProfile(
 }
 
 /**
+ * Fetch all profiles ordered by nickname.
+ */
+export async function getAllProfiles(supabase: SupabaseClient): Promise<Profile[]> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .order("nickname", { ascending: true });
+
+  if (error) throw error;
+  return (data ?? []) as Profile[];
+}
+
+/**
+ * Fetch a single profile by id.
+ */
+export async function getProfileById(
+  supabase: SupabaseClient,
+  id: string,
+): Promise<Profile | null> {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    if (error.code === "PGRST116") return null;
+    throw error;
+  }
+  return data as Profile;
+}
+
+/**
  * Update profile fields (nickname, avatar_url) in the database.
  */
 export async function updateProfileInDb(
