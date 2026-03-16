@@ -37,7 +37,8 @@ function getLeaderUserIds(
   users: UserSummary[],
   ballots: BallotSummary[],
   choices: BallotChoice[],
-  declaredWinners: Record<string, string>
+  declaredWinners: Record<string, string>,
+  bonusPoints: Record<string, number>
 ): string[] {
   if (users.length === 0 || ballots.length === 0) return [];
   const ballotsByUser = new Map<string, BallotSummary[]>();
@@ -49,7 +50,7 @@ function getLeaderUserIds(
   const userScores = new Map<string, number>();
   for (const user of users) {
     const userBallots = ballotsByUser.get(user.id) ?? [];
-    const best = userBallots.length === 0 ? 0 : Math.max(...userBallots.map((b) => getCorrectGuessCount(b.id, choices, declaredWinners)));
+    const best = userBallots.length === 0 ? 0 : Math.max(...userBallots.map((b) => getCorrectGuessCount(b.id, choices, declaredWinners) + (bonusPoints[b.id] ?? 0)));
     userScores.set(user.id, best);
     if (best > maxScore) maxScore = best;
   }
@@ -61,9 +62,10 @@ function getLeaderBallotIds(
   users: UserSummary[],
   ballots: BallotSummary[],
   choices: BallotChoice[],
-  declaredWinners: Record<string, string>
+  declaredWinners: Record<string, string>,
+  bonusPoints: Record<string, number>
 ): string[] {
-  const leaderUserIds = new Set(getLeaderUserIds(users, ballots, choices, declaredWinners));
+  const leaderUserIds = new Set(getLeaderUserIds(users, ballots, choices, declaredWinners, bonusPoints));
   return ballots.filter((b) => leaderUserIds.has(b.userId)).map((b) => b.id);
 }
 
@@ -288,7 +290,7 @@ function LiveEmptyState() {
 }
 
 export default function LivePage() {
-  const { allBallots, allChoices, allUsers, myBallots, categories, getNomineesForCategory, isDataLoading, isSessionLoading, user, declaredWinners, setWinner, clearWinner } = useLiveData(AWARD_SHOW_ID);
+  const { allBallots, allChoices, allUsers, myBallots, categories, getNomineesForCategory, isDataLoading, isSessionLoading, user, declaredWinners, bonusPoints, setWinner, clearWinner } = useLiveData(AWARD_SHOW_ID);
 
   const [currentCategoryIndex, setCurrentCategoryIndex] = useState(0);
   const [currentBallotIndex, setCurrentBallotIndex] = useState(0);
@@ -348,8 +350,8 @@ export default function LivePage() {
   };
 
   const leaderUserIds = useMemo(
-    () => getLeaderUserIds(allUsers, allBallots, allChoices, declaredWinners),
-    [allUsers, allBallots, allChoices, declaredWinners]
+    () => getLeaderUserIds(allUsers, allBallots, allChoices, declaredWinners, bonusPoints),
+    [allUsers, allBallots, allChoices, declaredWinners, bonusPoints]
   );
 
   const ballotsWhoPickedNominee = useMemo(

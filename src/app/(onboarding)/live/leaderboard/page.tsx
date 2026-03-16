@@ -22,14 +22,14 @@ function getRankedUsers(
   users: UserSummary[],
   ballots: BallotSummary[],
   choices: BallotChoice[],
-  declaredWinners: Record<string, string>
+  declaredWinners: Record<string, string>,
+  bonusPoints: Record<string, number>
 ): LeaderboardUserRow[] {
   const ballotsByUser = new Map<string, BallotSummary[]>();
   for (const b of ballots) {
     if (!ballotsByUser.has(b.userId)) ballotsByUser.set(b.userId, []);
     ballotsByUser.get(b.userId)!.push(b);
   }
-  const userMap = new Map(users.map((u) => [u.id, u]));
 
   return users
     .map((user) => {
@@ -39,7 +39,7 @@ function getRankedUsers(
           ? 0
           : Math.max(
               ...userBallots.map((b) =>
-                getCorrectGuessCount(b.id, choices, declaredWinners)
+                getCorrectGuessCount(b.id, choices, declaredWinners) + (bonusPoints[b.id] ?? 0)
               )
             );
       return { user, correctCount: bestScore };
@@ -55,15 +55,15 @@ function getLeaders(ranked: LeaderboardUserRow[]): LeaderboardUserRow[] {
 
 export default function LeaderboardPage() {
   const [mounted, setMounted] = useState(false);
-  const { allBallots, allChoices, allUsers, isDataLoading, isSessionLoading, declaredWinners } = useLiveData(AWARD_SHOW_ID);
+  const { allBallots, allChoices, allUsers, isDataLoading, isSessionLoading, declaredWinners, bonusPoints } = useLiveData(AWARD_SHOW_ID);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   const rankedUsers = useMemo(
-    () => getRankedUsers(allUsers, allBallots, allChoices, declaredWinners),
-    [allUsers, allBallots, allChoices, declaredWinners]
+    () => getRankedUsers(allUsers, allBallots, allChoices, declaredWinners, bonusPoints),
+    [allUsers, allBallots, allChoices, declaredWinners, bonusPoints]
   );
   const leaders = useMemo(() => getLeaders(rankedUsers), [rankedUsers]);
   const nonLeaderRanked = useMemo(

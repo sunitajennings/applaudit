@@ -4,6 +4,7 @@ import { useSession } from "@/lib/store/session";
 import { getBallotSummariesByAwardShow, getChoicesForBallots } from "@/lib/queries/ballots";
 import { getCategoriesByAwardShow, getNomineesByAwardShow } from "@/lib/queries/categories";
 import { fetchDeclaredWinners, upsertDeclaredWinner, deleteDeclaredWinner } from "@/lib/queries/winners";
+import { fetchBonusPoints } from "@/lib/queries/bonusPoints";
 import type { BallotSummary, DeclaredWinners, UserSummary } from "@/lib/live/types";
 import type { BallotChoice, Category, Nominee } from "@/lib/ballot/types";
 
@@ -17,6 +18,7 @@ export function useLiveData(awardShowId: string) {
   const [categories, setCategories] = useState<Category[]>([]);
   const [nominees, setNominees] = useState<Nominee[]>([]);
   const [declaredWinners, setDeclaredWinners] = useState<DeclaredWinners>({});
+  const [bonusPoints, setBonusPoints] = useState<Record<string, number>>({});
 
   useEffect(() => {
     Promise.all([
@@ -52,6 +54,10 @@ export function useLiveData(awardShowId: string) {
 
     fetchDeclaredWinners(supabase, awardShowId)
       .then(setDeclaredWinners)
+      .catch(console.error);
+
+    fetchBonusPoints(supabase, awardShowId)
+      .then(setBonusPoints)
       .catch(console.error);
 
     const channel = supabase
@@ -142,6 +148,7 @@ export function useLiveData(awardShowId: string) {
     isSessionLoading: isLoading,
     user,
     declaredWinners,
+    bonusPoints,
     setWinner,
     clearWinner,
   };
